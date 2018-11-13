@@ -68,8 +68,6 @@ with graph.as_default():
 	#y = tf.placeholder(tf.float32, [None, num_classes])
 
 
-	
-	x = next_batch_train
 	logits, end_points = inception.inception_v3(
 		x, num_classes=10, is_training=True)
 
