@@ -84,10 +84,10 @@ with graph.as_default():
 	with tf.Session() as sess:
 		sess.run(tf.global_variables_initializer())
 		
-		for epoch in range(num_epochs):
+		for epoch in range(len(num_epochs)):
 			print('\nEPOCH {0}'.format(epoch))	
 
-			for i in range(train_steps_per_epoch):
+			for i in range(len(train_steps_per_epoch)):
 				
 				try:
 					features, labels = sess.run(next_element_train)
