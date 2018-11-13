@@ -131,8 +131,10 @@ with graph.as_default():
 					valid_acc_list.append(valid_acc)
 					valid_acc_top6_list.append(valid_acc_top6)
 					if i%10 == 0:					
-						print('epoch={} i={}: valid_acc={:.4f} [top6={:.4f}]'.\
-							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
+						print('valid_acc_list:', valid_acc_list)
+						print('valid_acc_top6_list:', valid_acc_top6_list)
+						#print('epoch={} i={}: valid_acc={:.4f} [top6={:.4f}]'.\
+						#	format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
 				except tf.errors.OutOfRangeError:
 					print("End of valid dataset.")
 					break
