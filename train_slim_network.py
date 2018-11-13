@@ -100,7 +100,6 @@ with graph.as_default():
 					
 					#if i%100 == 0:
 					#	train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
-					"""
 
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
