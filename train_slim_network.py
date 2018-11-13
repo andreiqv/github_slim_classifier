@@ -62,8 +62,8 @@ with graph.as_default():
 			print('\nEPOCH {0}'.format(epoch))	
 			
 			
-			#for images, labels in enumerate(train_dataset):
-			#	print(labels)
+			for images, labels in enumerate(train_dataset):
+				print(labels)
 
 
 			
