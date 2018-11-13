@@ -87,12 +87,12 @@ with graph.as_default():
 		for epoch in range(num_epochs):
 			print('\nEPOCH {0}'.format(epoch))	
 
-			for i in range(train_steps_per_epoch)
+			for i in range(train_steps_per_epoch):
 				
 				try:
 					features, labels = sess.run(next_element_train)
 					print(i, labels[0])
-					
+
 					"""				
 					features, labels = sess.run(next_element_train)
 					#print(labels)
