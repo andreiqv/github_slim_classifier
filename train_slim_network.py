@@ -96,7 +96,7 @@ with graph.as_default():
 					#print(i, labels[0])
 					sess.run(train_op, feed_dict={x: features, y: labels})
 					train_acc = acc.eval(feed_dict={x: features, y: labels})
-					train_acc_list.apeend(train_acc)
+					train_acc_list.append(train_acc)
 
 					if i%10 == 0:
 						print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, np.mean(train_acc_list)))
