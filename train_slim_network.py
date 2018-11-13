@@ -36,6 +36,8 @@ iterator_train = train_dataset.make_one_shot_iterator()
 next_batch_train = iterator_train.get_next()
 
 
+tf.enable_eager_execution()
+
 # Create a new graph
 graph = tf.Graph() # no necessiry
 
