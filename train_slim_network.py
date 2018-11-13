@@ -96,12 +96,12 @@ with graph.as_default():
 					features, labels = sess.run(next_element_train)
 					#print(i, labels[0])
 					sess.run(train_op, feed_dict={x: features, y: labels})
-					acc, acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-					#train_acc = acc.eval(feed_dict={x: features, y: labels})
-					train_acc_list.append(train_acc)
-					train_acc_top6_list.append(train_acc_top6)
 
 					if i%10 == 0:
+						train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
+						#train_acc = acc.eval(feed_dict={x: features, y: labels})
+						train_acc_list.append(train_acc)
+						train_acc_top6_list.append(train_acc_top6)						
 						print('epoch={} i={}: train_acc={:.4f} train_top6={:.4f}'.\
 							format(epoch, i, np.mean(train_acc_list), np.mean(train_acc_top6_list)))
 					
