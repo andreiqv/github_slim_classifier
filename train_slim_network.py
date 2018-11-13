@@ -81,8 +81,10 @@ with graph.as_default():
 	NUM_EPOCH = 100
 	with tf.Session() as sess:
 		sess.run(tf.global_variables_initializer())
+		
 		for epoch in range(NUM_EPOCH):
 			print('\nEPOCH {0}'.format(epoch))	
+			sess.run(iterator.initializer)
 			
 			
 			#for images, labels in enumerate(train_dataset):
