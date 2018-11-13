@@ -77,7 +77,7 @@ with graph.as_default():
 	y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
 	logits, end_points = inception.inception_v3(
-		x, num_classes=num_classes, is_training=True)
+		x, num_classes=num_classes, is_training=False)
 
 	loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
 	train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
