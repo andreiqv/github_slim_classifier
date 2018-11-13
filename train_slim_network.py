@@ -18,6 +18,9 @@ from dataset_factory import GoodsDataset
 
 # tf.enable_eager_execution()
 import settings
+
+tf.enable_eager_execution()
+
 #from settings import IMAGE_SIZE
 IMAGE_SIZE = (299, 299)
 num_classes = settings.num_classes
@@ -35,8 +38,6 @@ valid_dataset = goods_dataset.get_valid_dataset()
 iterator_train = train_dataset.make_one_shot_iterator()
 next_batch_train = iterator_train.get_next()
 
-
-tf.enable_eager_execution()
 
 # Create a new graph
 graph = tf.Graph() # no necessiry
