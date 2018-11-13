@@ -102,7 +102,8 @@ with graph.as_default():
 					train_acc_top6_list.append(train_acc_top6)
 
 					if i%10 == 0:
-						print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, np.mean(train_acc_list)))
+						print('epoch={} i={}: train_acc={:.4f} train_top6={:.4f}'.\
+							format(epoch, i, np.mean(train_acc_list), np.mean(train_acc_top6_list)))
 					
 					#if i%100 == 0:
 					#	train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
