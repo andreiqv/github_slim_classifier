@@ -42,7 +42,7 @@ def model_function(next_element):
 	x, y = next_element
 
 	logits, end_points = inception.inception_v3(
-		x, num_classes=10, is_training=True)
+		x, num_classes=settings.num_classes, is_training=True)
 	loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
 	
 	return loss
