@@ -91,16 +91,13 @@ with graph.as_default():
 				
 				try:
 					features, labels = sess.run(next_element_train)
-					print(i, labels[0])
-
-					"""				
-					features, labels = sess.run(next_element_train)
-					#print(labels)
+					#print(i, labels[0])
 					sess.run(train_op, feed_dict={x: features, y: labels})
 					train_acc = acc.eval(feed_dict={x: features, y: labels})
 					
 					if i%10 == 0:
 						print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, train_acc))
+					
 					#if i%100 == 0:
 					#	train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
 					"""
