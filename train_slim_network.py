@@ -39,6 +39,7 @@ valid_dataset = goods_dataset.get_valid_dataset()
 
 num_epochs = 100
 train_steps_per_epoch = 1175
+valid_steps_per_epoch = 77
 train_dataset = train_dataset.repeat()
 valid_dataset = valid_dataset.repeat()
 
@@ -58,6 +59,9 @@ with graph.as_default():
 	
 	iterator_train = train_dataset.make_one_shot_iterator()
 	next_element_train = iterator_train.get_next()
+	iterator_valid = valid_dataset.make_one_shot_iterator()
+	next_element_valid = iterator_valid.get_next()
+
 	#iterator_train = train_dataset.make_initializable_iterator()
 	#x, y = next_element_train
 
@@ -96,20 +100,40 @@ with graph.as_default():
 					features, labels = sess.run(next_element_train)
 					#print(i, labels[0])
 					sess.run(train_op, feed_dict={x: features, y: labels})
-
-					if i%10 == 0:
-						train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-						#train_acc = acc.eval(feed_dict={x: features, y: labels})
-						train_acc_list.append(train_acc)
-						train_acc_top6_list.append(train_acc_top6)						
+					
+					train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
+					#train_acc = acc.eval(feed_dict={x: features, y: labels})
+					train_acc_list.append(train_acc)
+					train_acc_top6_list.append(train_acc_top6)						
+					if i%100 == 0:
 						print('epoch={} i={}: train_acc={:.4f} train_top6={:.4f}'.\
 							format(epoch, i, np.mean(train_acc_list), np.mean(train_acc_top6_list)))
 					
 					#if i%100 == 0:
-					#	train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
+					#	train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
 
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
 					break	
 
-			
+			# valid
+			valid_acc_list = []
+			valid_acc_top6_list = []			
+
+			for i in range(valid_steps_per_epoch):
+				
+				try:
+					features, labels = sess.run(next_element_valid)
+					valid_acc, valid_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
+					valid_acc_list.append(valid_acc)
+					valid_acc_top6_list.append(valid_acc_top6)
+					if i%10 == 0:					
+						print('epoch={} i={}: valid_acc={:.4f} valid_top6={:.4f}'.\
+							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
+				except tf.errors.OutOfRangeError:
+					print("End of valid dataset.")
+					break
+
+			print('EPOCH {}: train_acc={:.4f} train_top6={:.4f}; valid_acc={:.4f} valid_top6={:.4f}'.\
+				format(epoch, np.mean(train_acc_list), np.mean(train_acc_top6_list),
+					np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
