@@ -35,14 +35,15 @@ settings.valid_percentage)
 
 train_dataset = goods_dataset.get_train_dataset()
 valid_dataset = goods_dataset.get_valid_dataset()
-iterator_train = train_dataset.make_one_shot_iterator()
-next_batch_train = iterator_train.get_next()
 
 
 # Create a new graph
 graph = tf.Graph() # no necessiry
 
 with graph.as_default():
+
+	iterator_train = train_dataset.make_one_shot_iterator()
+	next_batch_train = iterator_train.get_next()
 
 	#x = tf.placeholder(tf.float32, [None, 784]) # Placeholder for input.
 	#y = tf.placeholder(tf.float32, [None, 10])  # Placeholder for labels.
