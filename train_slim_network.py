@@ -90,6 +90,7 @@ with graph.as_default():
 
 			i = 0
 			while True:
+
 				i += 1
 				try:
 					batch = sess.run(next_element_train)
@@ -98,7 +99,7 @@ with graph.as_default():
 					#print(labels)
 					sess.run(train_op)
 					train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
-					#print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, train_acc))
+					print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, train_acc))
 
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
