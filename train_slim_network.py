@@ -52,8 +52,9 @@ def model_function(next_element):
 graph = tf.Graph() # no necessiry
 
 with graph.as_default():
-
-	iterator_train = train_dataset.make_one_shot_iterator()
+	
+	#iterator_train = train_dataset.make_one_shot_iterator()
+	iterator_train = train_dataset.make_initializable_iterator()
 	next_element_train = iterator_train.get_next()
 	#x, y = next_element_train
 
@@ -92,19 +93,20 @@ with graph.as_default():
 			while True:
 
 				i += 1
-				try:					
-					batch = sess.run(next_element_train)
-					features = batch[0]
-					labels = batch[1]
+				try:
+					features, labels = sess.run(next_element_train)
+					print(i, labels[0])	
+					"""				
+					features, labels = sess.run(next_element_train)
 					#print(labels)
-					sess.run(train_op, feed_dict={x: batch[0], y: batch[1]})
-					train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
+					sess.run(train_op, feed_dict={x: features, y: labels})
+					train_acc = acc.eval(feed_dict={x: features, y: labels})
 					
 					if i%10 == 0:
 						print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, train_acc))
 					#if i%100 == 0:
 					#	train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
-						
+					"""
 
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
