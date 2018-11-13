@@ -80,6 +80,8 @@ with graph.as_default():
 	acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1	
 	acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)
 	
+
+	train_acc_list = []
 	
 	with tf.Session() as sess:
 		sess.run(tf.global_variables_initializer())
@@ -94,9 +96,10 @@ with graph.as_default():
 					#print(i, labels[0])
 					sess.run(train_op, feed_dict={x: features, y: labels})
 					train_acc = acc.eval(feed_dict={x: features, y: labels})
-					
+					train_acc_list.apeend(train_acc)
+
 					if i%10 == 0:
-						print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, train_acc))
+						print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, np.mean(train_acc_list)))
 					
 					#if i%100 == 0:
 					#	train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
