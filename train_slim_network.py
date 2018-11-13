@@ -88,6 +88,7 @@ with graph.as_default():
 			print('\nEPOCH {0}'.format(epoch))
 
 			train_acc_list = []
+			train_acc_top6_list = []
 
 			for i in range(train_steps_per_epoch):
 				
@@ -95,8 +96,10 @@ with graph.as_default():
 					features, labels = sess.run(next_element_train)
 					#print(i, labels[0])
 					sess.run(train_op, feed_dict={x: features, y: labels})
-					train_acc = acc.eval(feed_dict={x: features, y: labels})
+					acc, acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
+					#train_acc = acc.eval(feed_dict={x: features, y: labels})
 					train_acc_list.append(train_acc)
+					train_acc_top6_list.append(train_acc_top6)
 
 					if i%10 == 0:
 						print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, np.mean(train_acc_list)))
