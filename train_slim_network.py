@@ -98,7 +98,7 @@ with graph.as_default():
 					features = batch[0]
 					labels = batch[1]
 					#print(labels)
-					sess.run(train_op)
+					sess.run(train_op, feed_dict={x: batch[0], y: batch[1]})
 					train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
 					print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, train_acc))
 
