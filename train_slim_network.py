@@ -55,6 +55,7 @@ with graph.as_default():
 
 	iterator_train = train_dataset.make_one_shot_iterator()
 	next_element_train = iterator_train.get_next()
+	x, y = next_element_train
 
 	#x = tf.placeholder(tf.float32, [None, 784]) # Placeholder for input.
 	#y = tf.placeholder(tf.float32, [None, 10])  # Placeholder for labels.
@@ -63,10 +64,10 @@ with graph.as_default():
 
 	#input_tensor = keras.layers.Input(shape=(IMAGE_SIZE[0], IMAGE_SIZE[1], 3))
 	
-	x = tf.placeholder(tf.float32, [None, 299, 299, 3])
-	y = tf.placeholder(tf.float32, [None, num_classes])
+	#x = tf.placeholder(tf.float32, [None, 299, 299, 3])
+	#y = tf.placeholder(tf.float32, [None, num_classes])
 
-	"""	
+
 	
 	x = next_batch_train
 	logits, end_points = inception.inception_v3(
@@ -77,13 +78,7 @@ with graph.as_default():
 	correct_prediction = tf.equal(tf.argmax(logits,1), tf.argmax(y,1))
 	acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1	
 	acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)
-	"""
-
-	logits, loss = model_function(next_element_train)
-	train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
-	correct_prediction = tf.equal(tf.argmax(logits,1), tf.argmax(y,1))
-	acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1	
-	acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)
+	
 
 	NUM_EPOCH = 100
 	with tf.Session() as sess:
@@ -105,8 +100,8 @@ with graph.as_default():
 					#labels = batch[1]
 					#print(labels)
 					sess.run(train_op)
-					train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
-					print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, train_acc))
+					#train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
+					#print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, train_acc))
 
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
