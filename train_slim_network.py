@@ -74,9 +74,9 @@ with graph.as_default():
 			while True:
 				try:
 					batch = sess.run(next_batch_train)
-					#features = batch[0]
-					#labels = batch[1]
-					print(batch)
+					features = batch[0]
+					labels = batch[1]
+					print(labels)
 
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
