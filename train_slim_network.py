@@ -69,7 +69,7 @@ with graph.as_default():
 
 
 	logits, end_points = inception.inception_v3(
-		x, num_classes=10, is_training=True)
+		x, num_classes=num_classes, is_training=True)
 
 	loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
 	train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
