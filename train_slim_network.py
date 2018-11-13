@@ -37,13 +37,24 @@ train_dataset = goods_dataset.get_train_dataset()
 valid_dataset = goods_dataset.get_valid_dataset()
 
 
+def model_function(next_element):
+
+	x, y = next_element
+
+	logits, end_points = inception.inception_v3(
+		x, num_classes=10, is_training=True)
+	loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
+	
+	return loss
+
+
 # Create a new graph
 graph = tf.Graph() # no necessiry
 
 with graph.as_default():
 
 	iterator_train = train_dataset.make_one_shot_iterator()
-	next_batch_train = iterator_train.get_next()
+	next_element_train = iterator_train.get_next()
 
 	#x = tf.placeholder(tf.float32, [None, 784]) # Placeholder for input.
 	#y = tf.placeholder(tf.float32, [None, 10])  # Placeholder for labels.
@@ -51,13 +62,26 @@ with graph.as_default():
 	#x_images = tf.image.resize_images(x_images, [299, 299])	
 
 	#input_tensor = keras.layers.Input(shape=(IMAGE_SIZE[0], IMAGE_SIZE[1], 3))
+	
+	#x =  tf.placeholder(tf.float32, [None, 299, 299, 3])
+
 	"""
-	x =  tf.placeholder(tf.float32, [None, 299, 299, 3])
 	y = tf.placeholder(tf.float32, [None, 10])
 	
+	x = next_batch_train
 	logits, end_points = inception.inception_v3(
 		x, num_classes=10, is_training=True)
+
+	loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
+	train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
+	correct_prediction = tf.equal(tf.argmax(logits,1), tf.argmax(y,1))
+	acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1	
+	acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)
 	"""
+
+	loss = model_function(next_element_train)
+	train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
+
 
 	NUM_EPOCH = 100
 	with tf.Session() as sess:
@@ -73,10 +97,11 @@ with graph.as_default():
 			
 			while True:
 				try:
-					batch = sess.run(next_batch_train)
-					features = batch[0]
-					labels = batch[1]
-					print(labels)
+					#batch = sess.run(next_batch_train)
+					#features = batch[0]
+					#labels = batch[1]
+					#print(labels)
+					sess.run(train_op)
 
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
