@@ -65,17 +65,17 @@ with graph.as_default():
 			print('\nEPOCH {0}'.format(epoch))	
 			
 			
-			for images, labels in enumerate(train_dataset):
-				print(labels)
+			#for images, labels in enumerate(train_dataset):
+			#	print(labels)
 
 
 			
 			while True:
 				try:
-					batch = sess.run(next_batch_train )
-					features = batch[0]
-					labels = batch[1]
-					print(labels)
+					batch = sess.run(next_batch_train)
+					#features = batch[0]
+					#labels = batch[1]
+					print(batch)
 
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
