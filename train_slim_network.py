@@ -63,10 +63,10 @@ with graph.as_default():
 
 	#input_tensor = keras.layers.Input(shape=(IMAGE_SIZE[0], IMAGE_SIZE[1], 3))
 	
-	#x =  tf.placeholder(tf.float32, [None, 299, 299, 3])
+	x = tf.placeholder(tf.float32, [None, 299, 299, 3])
+	y = tf.placeholder(tf.float32, [None, num_classes])
 
-	"""
-	y = tf.placeholder(tf.float32, [None, 10])
+	"""	
 	
 	x = next_batch_train
 	logits, end_points = inception.inception_v3(
