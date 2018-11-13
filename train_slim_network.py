@@ -31,10 +31,9 @@ settings.IMAGE_SIZE, settings.train_batch, settings.valid_batch, settings.multip
 settings.valid_percentage)
 
 train_dataset = goods_dataset.get_train_dataset()
-#valid_dataset = goods_dataset.get_valid_dataset()
-
-#iterator_train = train_dataset.make_one_shot_iterator()
-#next_batch_train = iterator_train.get_next()
+valid_dataset = goods_dataset.get_valid_dataset()
+iterator_train = train_dataset.make_one_shot_iterator()
+next_batch_train = iterator_train.get_next()
 
 
 # Create a new graph
@@ -67,7 +66,7 @@ with graph.as_default():
 			#	print(labels)
 
 
-			"""
+			
 			while True:
 				try:
 					batch = sess.run(next_batch_train )
@@ -79,4 +78,4 @@ with graph.as_default():
 					print("End of training dataset.")
 					break	
 
-			"""
+			
