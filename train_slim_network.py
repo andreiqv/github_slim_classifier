@@ -64,8 +64,8 @@ with graph.as_default():
 
 	#input_tensor = keras.layers.Input(shape=(IMAGE_SIZE[0], IMAGE_SIZE[1], 3))
 	
-	x = tf.placeholder(tf.float32, [None, 299, 299, 3])
-	y = tf.placeholder(tf.float32, [None, num_classes])
+	x = tf.placeholder(tf.float32, [None, 299, 299, 3], name='input')
+	y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
 	logits, end_points = inception.inception_v3(
 		x, num_classes=num_classes, is_training=True)
@@ -92,15 +92,19 @@ with graph.as_default():
 			while True:
 
 				i += 1
-				try:
-					print('i=', i)
+				try:					
 					batch = sess.run(next_element_train)
 					features = batch[0]
 					labels = batch[1]
 					#print(labels)
 					sess.run(train_op, feed_dict={x: batch[0], y: batch[1]})
 					train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
-					print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, train_acc))
+					
+					if i%10 == 0:
+						print('epoch={0} i={1} train_acc={2:.4f}'.format(epoch, i, train_acc))
+					#if i%100 == 0:
+					#	train_acc = acc.eval(feed_dict={x: batch[0], y: batch[1]})
+						
 
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
