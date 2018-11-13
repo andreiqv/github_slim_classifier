@@ -91,8 +91,31 @@ with graph.as_default():
 		
 		for epoch in range(num_epochs):
 			print('\nEPOCH {0}'.format(epoch))
-			timer('train, epoch {0}'.format(epoch))
 
+			# valid
+			timer('valid, epoch {0}'.format(epoch))
+			valid_acc_list = []
+			valid_acc_top6_list = []			
+
+			for i in range(valid_steps_per_epoch):
+				
+				try:
+					features, labels = sess.run(next_element_valid)
+					valid_acc, valid_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
+					valid_acc_list.append(valid_acc)
+					valid_acc_top6_list.append(valid_acc_top6)
+					if i%10 == 0:					
+						print('valid_acc_list:', valid_acc_list)
+						print('valid_acc_top6_list:', valid_acc_top6_list)
+						#print('epoch={} i={}: valid_acc={:.4f} [top6={:.4f}]'.\
+						#	format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
+				except tf.errors.OutOfRangeError:
+					print("End of valid dataset.")
+					break
+			timer()
+
+
+			timer('train, epoch {0}'.format(epoch))
 			train_acc_list = []
 			train_acc_top6_list = []
 
@@ -118,27 +141,6 @@ with graph.as_default():
 					print("End of training dataset.")
 					break	
 
-			# valid
-			timer('valid, epoch {0}'.format(epoch))
-			valid_acc_list = []
-			valid_acc_top6_list = []			
-
-			for i in range(valid_steps_per_epoch):
-				
-				try:
-					features, labels = sess.run(next_element_valid)
-					valid_acc, valid_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-					valid_acc_list.append(valid_acc)
-					valid_acc_top6_list.append(valid_acc_top6)
-					if i%10 == 0:					
-						print('valid_acc_list:', valid_acc_list)
-						print('valid_acc_top6_list:', valid_acc_top6_list)
-						#print('epoch={} i={}: valid_acc={:.4f} [top6={:.4f}]'.\
-						#	format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
-				except tf.errors.OutOfRangeError:
-					print("End of valid dataset.")
-					break
-			timer()
 
 			print('EPOCH {}: train_acc={:.4f} [top6={:.4f}]; valid_acc={:.4f} [top6={:.4f}]\n'.\
 				format(epoch, np.mean(train_acc_list), np.mean(train_acc_top6_list),
