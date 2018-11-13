@@ -19,7 +19,7 @@ from dataset_factory import GoodsDataset
 # tf.enable_eager_execution()
 import settings
 
-tf.enable_eager_execution()
+#tf.enable_eager_execution()
 
 #from settings import IMAGE_SIZE
 IMAGE_SIZE = (299, 299)
