@@ -19,6 +19,7 @@ from dataset_factory import GoodsDataset
 
 # tf.enable_eager_execution()
 import settings
+from utils.timer import timer
 
 #tf.enable_eager_execution()
 
@@ -90,6 +91,7 @@ with graph.as_default():
 		
 		for epoch in range(num_epochs):
 			print('\nEPOCH {0}'.format(epoch))
+			timer('train, epoch {0}'.format(epoch))
 
 			train_acc_list = []
 			train_acc_top6_list = []
@@ -117,6 +119,7 @@ with graph.as_default():
 					break	
 
 			# valid
+			timer('valid, epoch {0}'.format(epoch))
 			valid_acc_list = []
 			valid_acc_top6_list = []			
 
@@ -133,6 +136,7 @@ with graph.as_default():
 				except tf.errors.OutOfRangeError:
 					print("End of valid dataset.")
 					break
+			timer()
 
 			print('EPOCH {}: train_acc={:.4f} [top6={:.4f}]; valid_acc={:.4f} [top6={:.4f}]\n'.\
 				format(epoch, np.mean(train_acc_list), np.mean(train_acc_top6_list),
