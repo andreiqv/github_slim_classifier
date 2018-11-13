@@ -93,6 +93,7 @@ with graph.as_default():
 
 				i += 1
 				try:
+					print('i=', i)
 					batch = sess.run(next_element_train)
 					features = batch[0]
 					labels = batch[1]
