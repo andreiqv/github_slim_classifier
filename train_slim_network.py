@@ -39,7 +39,7 @@ train_dataset = goods_dataset.get_train_dataset()
 valid_dataset = goods_dataset.get_valid_dataset()
 
 num_epochs = 100
-train_steps_per_epoch = 1175
+train_steps_per_epoch = 1157
 valid_steps_per_epoch = 77
 train_dataset = train_dataset.repeat()
 valid_dataset = valid_dataset.repeat()
@@ -77,7 +77,7 @@ with graph.as_default():
 	y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
 	logits, end_points = inception.inception_v3(
-		x, num_classes=num_classes, is_training=False)
+		x, num_classes=num_classes, is_training=True)
 
 	loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
 	train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
