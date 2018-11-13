@@ -79,15 +79,15 @@ with graph.as_default():
 	correct_prediction = tf.equal(tf.argmax(logits,1), tf.argmax(y,1))
 	acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1	
 	acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)
-	
-
-	train_acc_list = []
+		
 	
 	with tf.Session() as sess:
 		sess.run(tf.global_variables_initializer())
 		
 		for epoch in range(num_epochs):
-			print('\nEPOCH {0}'.format(epoch))	
+			print('\nEPOCH {0}'.format(epoch))
+
+			train_acc_list = []
 
 			for i in range(train_steps_per_epoch):
 				
