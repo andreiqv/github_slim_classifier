@@ -106,7 +106,7 @@ with graph.as_default():
 					train_acc_list.append(train_acc)
 					train_acc_top6_list.append(train_acc_top6)						
 					if i%100 == 0:
-						print('epoch={} i={}: train_acc={:.4f} train_top6={:.4f}'.\
+						print('epoch={} i={}: train_acc={:.4f} [top6={:.4f}]'.\
 							format(epoch, i, np.mean(train_acc_list), np.mean(train_acc_top6_list)))
 					
 					#if i%100 == 0:
@@ -128,12 +128,12 @@ with graph.as_default():
 					valid_acc_list.append(valid_acc)
 					valid_acc_top6_list.append(valid_acc_top6)
 					if i%10 == 0:					
-						print('epoch={} i={}: valid_acc={:.4f} valid_top6={:.4f}'.\
+						print('epoch={} i={}: valid_acc={:.4f} [top6={:.4f}]'.\
 							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
 				except tf.errors.OutOfRangeError:
 					print("End of valid dataset.")
 					break
 
-			print('EPOCH {}: train_acc={:.4f} train_top6={:.4f}; valid_acc={:.4f} valid_top6={:.4f}'.\
+			print('EPOCH {}: train_acc={:.4f} [top6={:.4f}]; valid_acc={:.4f} [top6={:.4f}]\n'.\
 				format(epoch, np.mean(train_acc_list), np.mean(train_acc_top6_list),
 					np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
