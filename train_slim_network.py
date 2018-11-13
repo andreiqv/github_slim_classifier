@@ -8,6 +8,7 @@
 
 import tensorflow as tf
 import numpy as np
+import math
 
 #import models.inception_v3 as inception
 from tensorflow.contrib.slim.nets import inception
@@ -36,26 +37,28 @@ settings.valid_percentage)
 train_dataset = goods_dataset.get_train_dataset()
 valid_dataset = goods_dataset.get_valid_dataset()
 
+num_epochs = 100
+train_steps_per_epoch = 1175
+train_dataset = train_dataset.repeat()
+valid_dataset = valid_dataset.repeat()
 
+"""
 def model_function(next_element):
-
 	x, y = next_element
-
 	logits, end_points = inception.inception_v3(
 		x, num_classes=settings.num_classes, is_training=True)
 	loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
-
 	return logits, loss
-
+"""
 
 # Create a new graph
 graph = tf.Graph() # no necessiry
 
 with graph.as_default():
 	
-	#iterator_train = train_dataset.make_one_shot_iterator()
-	iterator_train = train_dataset.make_initializable_iterator()
+	iterator_train = train_dataset.make_one_shot_iterator()
 	next_element_train = iterator_train.get_next()
+	#iterator_train = train_dataset.make_initializable_iterator()
 	#x, y = next_element_train
 
 	#x = tf.placeholder(tf.float32, [None, 784]) # Placeholder for input.
@@ -77,27 +80,19 @@ with graph.as_default():
 	acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1	
 	acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)
 	
-
-	NUM_EPOCH = 100
+	
 	with tf.Session() as sess:
 		sess.run(tf.global_variables_initializer())
 		
-		for epoch in range(NUM_EPOCH):
+		for epoch in range(num_epochs):
 			print('\nEPOCH {0}'.format(epoch))	
-			sess.run(iterator.initializer)
-			
-			
-			#for images, labels in enumerate(train_dataset):
-			#	print(labels)
 
-
-			i = 0
-			while True:
-
-				i += 1
+			for i in range(train_steps_per_epoch)
+				
 				try:
 					features, labels = sess.run(next_element_train)
-					print(i, labels[0])	
+					print(i, labels[0])
+					
 					"""				
 					features, labels = sess.run(next_element_train)
 					#print(labels)
