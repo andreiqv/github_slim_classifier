@@ -164,7 +164,7 @@ with graph.as_default():
 			f_res.write(res)
 
 		
-			if epoch % epochs_checkpoint == 0
+			if epoch % epochs_checkpoint == 0:
 				# save_checkpoints	
 				saver = tf.train.Saver()		
 				saver.save(sess, './saved_model/{0}'.format(checkpoint_name))  
