@@ -99,6 +99,7 @@ with graph.as_default():
 	y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
 	logits, end_points = net(x, num_classes=num_classes, is_training=True)
+	logits = tf.reshape(logits, [-1, num_classes])
 
 	loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
 	train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
