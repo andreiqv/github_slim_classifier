@@ -29,11 +29,12 @@ from tensorflow.contrib.slim.nets import resnet_v1, resnet_v2
 from tensorflow.contrib.slim.nets import vgg
 
 slim = tf.contrib.slim
-#net = inception.inception_v3
+net = inception.inception_v3
 #net = inception.inception_v4
-net = resnet_v2.resnet_v2_50
+#net = resnet_v2.resnet_v2_50
 #net = vgg.vgg_19
-net_model_name = 'resnet_v2_50'
+
+net_model_name = 'inception_v3'
 print('Network name:', net_model_name)
 #IMAGE_SIZE = (299, 299) 
 OUTPUT_NODE = 'softmax'
@@ -61,11 +62,9 @@ train_dataset = goods_dataset.get_train_dataset()
 valid_dataset = goods_dataset.get_valid_dataset()
 
 num_epochs = 50
-epochs_checkpoint = 1 # saving checkpoints and pb-file 
-#train_steps_per_epoch = 1157
-#valid_steps_per_epoch = 77
-train_steps_per_epoch = 110
-valid_steps_per_epoch = 50
+epochs_checkpoint = 10 # saving checkpoints and pb-file 
+train_steps_per_epoch = 1157
+valid_steps_per_epoch = 77
 train_dataset = train_dataset.repeat()
 valid_dataset = valid_dataset.repeat()
 
