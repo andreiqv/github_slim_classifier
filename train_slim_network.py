@@ -92,6 +92,41 @@ with graph.as_default():
 		for epoch in range(num_epochs):
 			print('\nEPOCH {0}'.format(epoch))
 
+
+
+			timer('train, epoch {0}'.format(epoch))
+			train_acc_list = []
+			train_acc_top6_list = []
+
+			for i in range(train_steps_per_epoch):
+				
+				try:
+					features, labels = sess.run(next_element_train)
+					#print(i, labels[0])
+					sess.run(train_op, feed_dict={x: features, y: labels})
+					
+					train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
+					#train_acc = acc.eval(feed_dict={x: features, y: labels})
+					
+					print(type((train_acc)))
+					print('train_acc:', train_acc)
+					print(type((train_acc_top6)))
+					print('train_acc_top6:', train_acc_top6)
+
+					train_acc_list.append(train_acc)
+					train_acc_top6_list.append(np.mean(train_acc_top6))
+					if i%100 == 0:
+						print('epoch={} i={}: train_acc={:.4f} [top6={:.4f}]'.\
+							format(epoch, i, np.mean(train_acc_list), np.mean(train_acc_top6_list)))
+					
+					#if i%100 == 0:
+					#	train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
+
+				except tf.errors.OutOfRangeError:
+					print("End of training dataset.")
+					break	
+
+
 			# valid
 			timer('valid, epoch {0}'.format(epoch))
 			valid_acc_list = []
@@ -115,33 +150,6 @@ with graph.as_default():
 					print("End of valid dataset.")
 					break
 			timer()
-
-
-			timer('train, epoch {0}'.format(epoch))
-			train_acc_list = []
-			train_acc_top6_list = []
-
-			for i in range(train_steps_per_epoch):
-				
-				try:
-					features, labels = sess.run(next_element_train)
-					#print(i, labels[0])
-					sess.run(train_op, feed_dict={x: features, y: labels})
-					
-					train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-					#train_acc = acc.eval(feed_dict={x: features, y: labels})
-					train_acc_list.append(train_acc)
-					train_acc_top6_list.append(train_acc_top6)						
-					if i%100 == 0:
-						print('epoch={} i={}: train_acc={:.4f} [top6={:.4f}]'.\
-							format(epoch, i, np.mean(train_acc_list), np.mean(train_acc_top6_list)))
-					
-					#if i%100 == 0:
-					#	train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-
-				except tf.errors.OutOfRangeError:
-					print("End of training dataset.")
-					break	
 
 
 			print('EPOCH {}: train_acc={:.4f} [top6={:.4f}]; valid_acc={:.4f} [top6={:.4f}]\n'.\
