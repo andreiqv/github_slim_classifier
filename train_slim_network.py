@@ -82,8 +82,8 @@ with graph.as_default():
 	loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
 	train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
 	correct_prediction = tf.equal(tf.argmax(logits,1), tf.argmax(y,1))
-	acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1	
-	acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)
+	acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1 - mean value	
+	acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)  # list values for batch.
 		
 	
 	with tf.Session() as sess:
@@ -108,10 +108,10 @@ with graph.as_default():
 					train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
 					#train_acc = acc.eval(feed_dict={x: features, y: labels})
 					
-					print(type((train_acc)))
-					print('train_acc:', train_acc)
-					print(type((train_acc_top6)))
-					print('train_acc_top6:', train_acc_top6)
+					#print(type((train_acc)))
+					#print('train_acc:', train_acc)
+					#print(type((train_acc_top6)))
+					#print('train_acc_top6:', train_acc_top6)
 
 					train_acc_list.append(train_acc)
 					train_acc_top6_list.append(np.mean(train_acc_top6))
@@ -137,13 +137,13 @@ with graph.as_default():
 				try:
 					features, labels = sess.run(next_element_valid)
 					valid_acc, valid_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-					print(type((valid_acc)))
-					print('valid_acc:', valid_acc)
-					print(type((valid_acc_top6)))
-					print('valid_acc_top6:', valid_acc_top6)
+					#print(type((valid_acc)))
+					#print('valid_acc:', valid_acc)
+					#print(type((valid_acc_top6)))
+					#print('valid_acc_top6:', valid_acc_top6)
 					valid_acc_list.append(valid_acc)
 					valid_acc_top6_list.append(np.mean(valid_acc_top6))
-					if i%1 == 0:
+					if i%10 == 0:
 						print('epoch={} i={}: valid_acc={:.4f} [top6={:.4f}]'.\
 							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
 				except tf.errors.OutOfRangeError:
