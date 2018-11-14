@@ -60,7 +60,7 @@ settings.valid_percentage)
 train_dataset = goods_dataset.get_train_dataset()
 valid_dataset = goods_dataset.get_valid_dataset()
 
-num_epochs = 100
+num_epochs = 10
 train_steps_per_epoch = 1157
 valid_steps_per_epoch = 77
 train_dataset = train_dataset.repeat()
@@ -202,7 +202,7 @@ with graph.as_default():
 f_res.close()
 
 """
-Inception-v3.
+Inception-v3.  (910 + 31 sec / epoch)  299x299.
 EPOCH 0: train_acc=0.1611 [top6=0.3261]; valid_acc=0.1425 [top6=0.3247]
 EPOCH 1: train_acc=0.1795 [top6=0.3852]; valid_acc=0.1840 [top6=0.3927]
 EPOCH 5: train_acc=0.3400 [top6=0.7028]; valid_acc=0.2802 [top6=0.5678]
