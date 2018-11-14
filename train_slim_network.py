@@ -33,7 +33,7 @@ slim = tf.contrib.slim
 #net = inception.inception_v4
 net = resnet_v2.resnet_v2_50
 #net = vgg.vgg_19
-net_model_name = 'inception_v4'
+net_model_name = 'resnet_v2_50'
 print('Network name:', net_model_name)
 #IMAGE_SIZE = (299, 299) 
 OUTPUT_NODE = 'softmax'
