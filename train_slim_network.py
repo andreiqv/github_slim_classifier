@@ -28,8 +28,8 @@ from utils.timer import timer
 from tensorflow.contrib.slim.nets import inception
 slim = tf.contrib.slim
 net = inception.inception_v3
-print('Network name:', net.scope)
-sys.exit()
+net_model_name = 'inception_v3'
+print('Network name:', net_model_name)
 
 #from settings import IMAGE_SIZE
 IMAGE_SIZE = (299, 299)
@@ -42,7 +42,7 @@ results_filename = '_results.txt'
 f_res = open(results_filename, 'wt')
 dir_for_pb = 'pb'
 dir_for_checkpoints = 'checkpoints'
-checkpoint_name = net.scope
+checkpoint_name = net_model_name
 os.system('mkdir -p {}'.format(dir_for_pb))
 os.system('mkdir -p {}'.format(dir_for_checkpoints))
 
@@ -188,7 +188,7 @@ with graph.as_default():
 		output_graph_def = tf.graph_util.convert_variables_to_constants(
 			sess, graph.as_graph_def(), output_node_names)
 		# save graph:		
-		pb_file_name = '{}_acc={:.4f}_[{:.4f}].pb'.format(net.scope, mean_valid_acc, mean_valid_acc_top6)
+		pb_file_name = '{}_acc={:.4f}_[{:.4f}].pb'.format(net_model_name, mean_valid_acc, mean_valid_acc_top6)
 		tf.train.write_graph(output_graph_def, dir_for_model, pb_file_name, as_text=False)	
 			
 
