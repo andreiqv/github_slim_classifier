@@ -30,7 +30,7 @@ from tensorflow.contrib.slim.nets import vgg
 
 slim = tf.contrib.slim
 #net = inception.inception_v3
-net = vgg.vgg19
+net = vgg.vgg_19
 net_model_name = 'vgg19'
 print('Network name:', net_model_name)
 
