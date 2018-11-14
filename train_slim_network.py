@@ -24,11 +24,12 @@ from utils.timer import timer
 #--
 # Select network
 #import models.inception_v3 as inception
-from tensorflow.contrib.slim.nets import inception
+from tensorflow.contrib.slim.nets import inception, inception_v4
 from tensorflow.contrib.slim.nets import resnet_v1, resnet_v2
 from tensorflow.contrib.slim.nets import vgg
 
 slim = tf.contrib.slim
+#net = inception.inception_v3
 net = inception.inception_v4
 #net = resnet_v2.resnet_v2_101
 #net = vgg.vgg_19
