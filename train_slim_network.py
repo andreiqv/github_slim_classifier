@@ -27,14 +27,14 @@ from utils.timer import timer
 # Select network
 #import models.inception_v3 as inception
 from tensorflow.contrib.slim.nets import inception
-from tensorflow.contrib.slim.nets import resnet_v2
+from tensorflow.contrib.slim.nets import resnet_v1, resnet_v2
 from tensorflow.contrib.slim.nets import vgg
 
 slim = tf.contrib.slim
 #net = inception.inception_v2
-net = resnet_v2.resnet_v2_50
+net = resnet_v1.resnet_v1_101
 #net = vgg.vgg_19
-net_model_name = 'resnet_v2_50'
+net_model_name = 'test'
 print('Network name:', net_model_name)
 #IMAGE_SIZE = (299, 299) 
 
