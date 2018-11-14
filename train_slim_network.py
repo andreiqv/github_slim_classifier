@@ -11,7 +11,7 @@ v2 - added saver.
 import tensorflow as tf
 import numpy as np
 import math
-import sys
+import sys, os
 
 from dataset_factory import GoodsDataset
 #from goods_tf_records import GoodsTfrecordsDataset
