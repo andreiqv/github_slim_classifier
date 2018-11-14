@@ -102,13 +102,13 @@ with graph.as_default():
 				try:
 					features, labels = sess.run(next_element_valid)
 					valid_acc, valid_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-					valid_acc_list.append(valid_acc)
-					valid_acc_top6_list.append(valid_acc_top6)
+					valid_acc_list += valid_acc
+					valid_acc_top6_list += valid_acc_top6
 					print('valid_acc_list:', valid_acc_list)
 					print('valid_acc_top6_list:', valid_acc_top6_list)					
-					#if i%10 == 0:					
-						#print('epoch={} i={}: valid_acc={:.4f} [top6={:.4f}]'.\
-						#	format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
+					if i%1 == 0:
+						print('epoch={} i={}: valid_acc={:.4f} [top6={:.4f}]'.\
+							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
 				except tf.errors.OutOfRangeError:
 					print("End of valid dataset.")
 					break
