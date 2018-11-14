@@ -30,7 +30,7 @@ from tensorflow.contrib.slim.nets import vgg
 
 slim = tf.contrib.slim
 #net = inception.inception_v3
-net = inception.inception_v4
+net = inception_v4.inception_v4
 #net = resnet_v2.resnet_v2_101
 #net = vgg.vgg_19
 net_model_name = 'inception_v4'
