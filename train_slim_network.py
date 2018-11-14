@@ -185,7 +185,7 @@ with graph.as_default():
 					sess, graph.as_graph_def(), output_node_names)
 				# save graph:		
 				pb_file_name = '{}_acc={:.4f}_[{:.4f}].pb'.format(net_model_name, mean_valid_acc, mean_valid_acc_top6)
-				tf.train.write_graph(output_graph_def, dir_for_model, pb_file_name, as_text=False)	
+				tf.train.write_graph(output_graph_def, dir_for_pb, pb_file_name, as_text=False)	
 			
 
 
