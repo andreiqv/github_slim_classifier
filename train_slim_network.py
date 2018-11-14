@@ -26,12 +26,14 @@ from utils.timer import timer
 # Select network
 #import models.inception_v3 as inception
 from tensorflow.contrib.slim.nets import inception
+from tensorflow.contrib.slim.nets import resnet_v2
 from tensorflow.contrib.slim.nets import vgg
 
 slim = tf.contrib.slim
 #net = inception.inception_v3
-net = vgg.vgg_19
-net_model_name = 'vgg19'
+#net = vgg.vgg_19
+net = resnet_v2.resnet_v2_50
+net_model_name = 'resnet'
 print('Network name:', net_model_name)
 IMAGE_SIZE = (224, 224)
 #from settings import IMAGE_SIZE
@@ -207,7 +209,7 @@ EPOCH 5: train_acc=0.3400 [top6=0.7028]; valid_acc=0.2802 [top6=0.5678]
 EPOCH 10: train_acc=0.6066 [top6=0.9249]; valid_acc=0.3785 [top6=0.7643]
 EPOCH 20: train_acc=0.8325 [top6=0.9869]; valid_acc=0.6048 [top6=0.9237]
 EPOCH 25: train_acc=0.8812 [top6=0.9933]; valid_acc=0.6762 [top6=0.9581]
-
+EPOCH 30: train_acc=0.9187 [top6=0.9973]; valid_acc=0.6758 [top6=0.9500]
 
 
 """
