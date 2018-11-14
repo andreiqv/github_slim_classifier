@@ -115,7 +115,7 @@ with graph.as_default():
 
 					train_acc_list.append(train_acc)
 					train_acc_top6_list.append(np.mean(train_acc_top6))
-					if i%2 == 0:
+					if i%100 == 0:
 						print('epoch={} i={}: train_acc={:.4f} [top6={:.4f}]'.\
 							format(epoch, i, np.mean(train_acc_list), np.mean(train_acc_top6_list)))
 					
