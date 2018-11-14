@@ -29,10 +29,10 @@ from tensorflow.contrib.slim.nets import resnet_v1, resnet_v2
 from tensorflow.contrib.slim.nets import vgg
 
 slim = tf.contrib.slim
-net = inception.inception_v3
+net = inception.inception_v4
 #net = resnet_v2.resnet_v2_101
 #net = vgg.vgg_19
-net_model_name = 'inception_v3'
+net_model_name = 'inception_v4'
 print('Network name:', net_model_name)
 #IMAGE_SIZE = (299, 299) 
 OUTPUT_NODE = 'softmax'
