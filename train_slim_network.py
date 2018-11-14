@@ -35,6 +35,7 @@ net = inception.inception_v3
 net_model_name = 'inception_v3'
 print('Network name:', net_model_name)
 #IMAGE_SIZE = (299, 299) 
+OUTPUT_NODE = 'softmax'
 
 num_classes = settings.num_classes
 print('num_classes:', num_classes)
@@ -59,9 +60,11 @@ train_dataset = goods_dataset.get_train_dataset()
 valid_dataset = goods_dataset.get_valid_dataset()
 
 num_epochs = 50
-epochs_checkpoint = 5 # saving checkpoints and pb-file 
-train_steps_per_epoch = 1157
-valid_steps_per_epoch = 77
+epochs_checkpoint = 1 # saving checkpoints and pb-file 
+#train_steps_per_epoch = 1157
+#valid_steps_per_epoch = 77
+train_steps_per_epoch = 110
+valid_steps_per_epoch = 50
 train_dataset = train_dataset.repeat()
 valid_dataset = valid_dataset.repeat()
 
@@ -92,6 +95,7 @@ with graph.as_default():
 
 	logits, end_points = net(x, num_classes=num_classes, is_training=True)
 	logits = tf.reshape(logits, [-1, num_classes])
+	output = tf.nn.softmax(logits, name=OUTPUT_NODE)
 
 	loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
 	train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
@@ -174,6 +178,7 @@ with graph.as_default():
 				tf.graph_util.remove_training_nodes(graph.as_graph_def())
 				# tf.contrib.quantize.create_eval_graph(graph)
 				# tf.contrib.quantize.create_training_graph()
+
 				output_node_names = [OUTPUT_NODE]
 				output_graph_def = tf.graph_util.convert_variables_to_constants(
 					sess, graph.as_graph_def(), output_node_names)
