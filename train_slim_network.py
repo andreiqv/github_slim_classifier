@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 Прямой проход без хеширования промежуточных данных.
+
+v2 - added saver.
 """
 	
 # https://github.com/tensorflow/tensorflow/issues/22837#issuecomment-428327601
@@ -9,10 +11,7 @@
 import tensorflow as tf
 import numpy as np
 import math
-
-#import models.inception_v3 as inception
-from tensorflow.contrib.slim.nets import inception
-slim = tf.contrib.slim
+import sys
 
 from dataset_factory import GoodsDataset
 #from goods_tf_records import GoodsTfrecordsDataset
@@ -23,12 +22,29 @@ from utils.timer import timer
 
 #tf.enable_eager_execution()
 
+#--
+# Select network
+#import models.inception_v3 as inception
+from tensorflow.contrib.slim.nets import inception
+slim = tf.contrib.slim
+net = inception.inception_v3
+print('Network name:', net.scope)
+sys.exit()
+
 #from settings import IMAGE_SIZE
 IMAGE_SIZE = (299, 299)
 num_classes = settings.num_classes
 print('num_classes:', num_classes)
 
-
+#--
+# for saving results
+results_filename = '_results.txt'
+f_res = open(results_filename, 'wt')
+dir_for_pb = 'pb'
+dir_for_checkpoints = 'checkpoints'
+checkpoint_name = net.scope
+os.system('mkdir -p {}'.format(dir_for_pb))
+os.system('mkdir -p {}'.format(dir_for_checkpoints))
 
 # dataset
 goods_dataset = GoodsDataset("dataset-181018.list", "dataset-181018.labels", 
@@ -76,8 +92,7 @@ with graph.as_default():
 	x = tf.placeholder(tf.float32, [None, 299, 299, 3], name='input')
 	y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
-	logits, end_points = inception.inception_v3(
-		x, num_classes=num_classes, is_training=True)
+	logits, end_points = net(x, num_classes=num_classes, is_training=True)
 
 	loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
 	train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
@@ -91,8 +106,6 @@ with graph.as_default():
 		
 		for epoch in range(num_epochs):
 			print('\nEPOCH {0}'.format(epoch))
-
-
 
 			timer('train, epoch {0}'.format(epoch))
 			train_acc_list = []
@@ -115,7 +128,7 @@ with graph.as_default():
 
 					train_acc_list.append(train_acc)
 					train_acc_top6_list.append(np.mean(train_acc_top6))
-					if i%100 == 0:
+					if i % 100 == 0:
 						print('epoch={} i={}: train_acc={:.4f} [top6={:.4f}]'.\
 							format(epoch, i, np.mean(train_acc_list), np.mean(train_acc_top6_list)))
 					
@@ -143,7 +156,7 @@ with graph.as_default():
 					#print('valid_acc_top6:', valid_acc_top6)
 					valid_acc_list.append(valid_acc)
 					valid_acc_top6_list.append(np.mean(valid_acc_top6))
-					if i%10 == 0:
+					if i % 10 == 0:
 						print('epoch={} i={}: valid_acc={:.4f} [top6={:.4f}]'.\
 							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
 				except tf.errors.OutOfRangeError:
@@ -151,7 +164,46 @@ with graph.as_default():
 					break
 			timer()
 
+			mean_train_acc = np.mean(train_acc_list)
+			mean_train_acc_top6 = np.mean(train_acc_top6_list)
+			mean_valid_acc = np.mean(valid_acc_list)
+			mean_valid_acc_top6 = np.mean(valid_acc_top6_list)
+			res = 'EPOCH {}: train_acc={:.4f} [top6={:.4f}]; valid_acc={:.4f} [top6={:.4f}]\n'.\
+				format(epoch, mean_train_acc, mean_train_acc_top6,
+					mean_valid_acc, mean_valid_acc_top6)
+			print(res)
+			f_res.write(res + '\n')
 
-			print('EPOCH {}: train_acc={:.4f} [top6={:.4f}]; valid_acc={:.4f} [top6={:.4f}]\n'.\
-				format(epoch, np.mean(train_acc_list), np.mean(train_acc_top6_list),
-					np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
+		
+		# save_checkpoints	
+		saver = tf.train.Saver()		
+		saver.save(sess, './saved_model/{0}'.format(checkpoint_name))  
+
+		# SAVE GRAPH TO PB
+		graph = sess.graph			
+		tf.graph_util.remove_training_nodes(graph.as_graph_def())
+		# tf.contrib.quantize.create_eval_graph(graph)
+		# tf.contrib.quantize.create_training_graph()
+		output_node_names = [OUTPUT_NODE]
+		output_graph_def = tf.graph_util.convert_variables_to_constants(
+			sess, graph.as_graph_def(), output_node_names)
+		# save graph:		
+		pb_file_name = '{}_acc={:.4f}_[{:.4f}].pb'.format(net.scope, mean_valid_acc, mean_valid_acc_top6)
+		tf.train.write_graph(output_graph_def, dir_for_model, pb_file_name, as_text=False)	
+			
+
+
+f_res.close()
+
+"""
+Inception-v3.
+EPOCH 0: train_acc=0.1611 [top6=0.3261]; valid_acc=0.1425 [top6=0.3247]
+EPOCH 1: train_acc=0.1795 [top6=0.3852]; valid_acc=0.1840 [top6=0.3927]
+EPOCH 5: train_acc=0.3400 [top6=0.7028]; valid_acc=0.2802 [top6=0.5678]
+EPOCH 10: train_acc=0.6066 [top6=0.9249]; valid_acc=0.3785 [top6=0.7643]
+EPOCH 20: train_acc=0.8325 [top6=0.9869]; valid_acc=0.6048 [top6=0.9237]
+EPOCH 22: train_acc=0.8527 [top6=0.9899]; valid_acc=0.6353 [top6=0.9386]
+
+
+
+"""
