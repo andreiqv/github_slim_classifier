@@ -21,8 +21,6 @@ import settings
 from settings import IMAGE_SIZE
 from utils.timer import timer
 
-#tf.enable_eager_execution()
-
 #--
 # Select network
 #import models.inception_v3 as inception
@@ -31,10 +29,10 @@ from tensorflow.contrib.slim.nets import resnet_v1, resnet_v2
 from tensorflow.contrib.slim.nets import vgg
 
 slim = tf.contrib.slim
-#net = inception.inception_v2
-net = resnet_v2.resnet_v2_101
+net = inception.inception_v3
+#net = resnet_v2.resnet_v2_101
 #net = vgg.vgg_19
-net_model_name = 'test'
+net_model_name = 'inception_v3'
 print('Network name:', net_model_name)
 #IMAGE_SIZE = (299, 299) 
 
@@ -53,14 +51,15 @@ os.system('mkdir -p {}'.format(dir_for_pb))
 os.system('mkdir -p {}'.format(dir_for_checkpoints))
 
 # dataset
-goods_dataset = GoodsDataset("dataset-181018.list", "dataset-181018.labels", 
+goods_dataset = GoodsDataset(settings.dataset_list, settings.labels_list, 
 settings.IMAGE_SIZE, settings.train_batch, settings.valid_batch, settings.multiply, 
 settings.valid_percentage)
 
 train_dataset = goods_dataset.get_train_dataset()
 valid_dataset = goods_dataset.get_valid_dataset()
 
-num_epochs = 10
+num_epochs = 50
+epochs_checkpoint = 5 # saving checkpoints and pb-file 
 train_steps_per_epoch = 1157
 valid_steps_per_epoch = 77
 train_dataset = train_dataset.repeat()
@@ -88,13 +87,6 @@ with graph.as_default():
 	#iterator_train = train_dataset.make_initializable_iterator()
 	#x, y = next_element_train
 
-	#x = tf.placeholder(tf.float32, [None, 784]) # Placeholder for input.
-	#y = tf.placeholder(tf.float32, [None, 10])  # Placeholder for labels.
-	#x_images = tf.reshape(x, [-1,28,28,1])
-	#x_images = tf.image.resize_images(x_images, [299, 299])	
-
-	#input_tensor = keras.layers.Input(shape=(IMAGE_SIZE[0], IMAGE_SIZE[1], 3))
-	
 	x = tf.placeholder(tf.float32, [None, IMAGE_SIZE[0], IMAGE_SIZE[1], 3], name='input')
 	y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
@@ -126,22 +118,13 @@ with graph.as_default():
 					sess.run(train_op, feed_dict={x: features, y: labels})
 					
 					train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-					#train_acc = acc.eval(feed_dict={x: features, y: labels})
-					
-					#print(type((train_acc)))
-					#print('train_acc:', train_acc)
-					#print(type((train_acc_top6)))
-					#print('train_acc_top6:', train_acc_top6)
-
+	
 					train_acc_list.append(train_acc)
 					train_acc_top6_list.append(np.mean(train_acc_top6))
 					if i % 100 == 0:
 						print('epoch={} i={}: train_acc={:.4f} [top6={:.4f}]'.\
 							format(epoch, i, np.mean(train_acc_list), np.mean(train_acc_top6_list)))
 					
-					#if i%100 == 0:
-					#	train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
 					break	
@@ -157,10 +140,7 @@ with graph.as_default():
 				try:
 					features, labels = sess.run(next_element_valid)
 					valid_acc, valid_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-					#print(type((valid_acc)))
-					#print('valid_acc:', valid_acc)
-					#print(type((valid_acc_top6)))
-					#print('valid_acc_top6:', valid_acc_top6)
+
 					valid_acc_list.append(valid_acc)
 					valid_acc_top6_list.append(np.mean(valid_acc_top6))
 					if i % 10 == 0:
@@ -169,8 +149,10 @@ with graph.as_default():
 				except tf.errors.OutOfRangeError:
 					print("End of valid dataset.")
 					break
+			
 			timer()
 
+			# result for current epoch
 			mean_train_acc = np.mean(train_acc_list)
 			mean_train_acc_top6 = np.mean(train_acc_top6_list)
 			mean_valid_acc = np.mean(valid_acc_list)
@@ -179,24 +161,25 @@ with graph.as_default():
 				format(epoch, mean_train_acc, mean_train_acc_top6,
 					mean_valid_acc, mean_valid_acc_top6)
 			print(res)
-			f_res.write(res + '\n')
+			f_res.write(res)
 
 		
-		# save_checkpoints	
-		saver = tf.train.Saver()		
-		saver.save(sess, './saved_model/{0}'.format(checkpoint_name))  
+			if epoch % epochs_checkpoint == 0
+				# save_checkpoints	
+				saver = tf.train.Saver()		
+				saver.save(sess, './saved_model/{0}'.format(checkpoint_name))  
 
-		# SAVE GRAPH TO PB
-		graph = sess.graph			
-		tf.graph_util.remove_training_nodes(graph.as_graph_def())
-		# tf.contrib.quantize.create_eval_graph(graph)
-		# tf.contrib.quantize.create_training_graph()
-		output_node_names = [OUTPUT_NODE]
-		output_graph_def = tf.graph_util.convert_variables_to_constants(
-			sess, graph.as_graph_def(), output_node_names)
-		# save graph:		
-		pb_file_name = '{}_acc={:.4f}_[{:.4f}].pb'.format(net_model_name, mean_valid_acc, mean_valid_acc_top6)
-		tf.train.write_graph(output_graph_def, dir_for_model, pb_file_name, as_text=False)	
+				# SAVE GRAPH TO PB
+				graph = sess.graph			
+				tf.graph_util.remove_training_nodes(graph.as_graph_def())
+				# tf.contrib.quantize.create_eval_graph(graph)
+				# tf.contrib.quantize.create_training_graph()
+				output_node_names = [OUTPUT_NODE]
+				output_graph_def = tf.graph_util.convert_variables_to_constants(
+					sess, graph.as_graph_def(), output_node_names)
+				# save graph:		
+				pb_file_name = '{}_acc={:.4f}_[{:.4f}].pb'.format(net_model_name, mean_valid_acc, mean_valid_acc_top6)
+				tf.train.write_graph(output_graph_def, dir_for_model, pb_file_name, as_text=False)	
 			
 
 
@@ -212,5 +195,9 @@ EPOCH 20: train_acc=0.8325 [top6=0.9869]; valid_acc=0.6048 [top6=0.9237]
 EPOCH 25: train_acc=0.8812 [top6=0.9933]; valid_acc=0.6762 [top6=0.9581]
 EPOCH 30: train_acc=0.9187 [top6=0.9973]; valid_acc=0.6758 [top6=0.9500]
 EPOCH 31: train_acc=0.9229 [top6=0.9972]; valid_acc=0.6625 [top6=0.9525]
+
+vgg_19: (1653.3062 sec. + 39) 224x224
+EPOCH 0: train_acc=0.1567 [top6=0.3003]; valid_acc=0.1644 [top6=0.3174]
+EPOCH 1: train_acc=0.1674 [top6=0.3843]; valid_acc=0.1653 [top6=0.3898]
 
 """
