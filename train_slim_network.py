@@ -33,9 +33,10 @@ slim = tf.contrib.slim
 net = vgg.vgg_19
 net_model_name = 'vgg19'
 print('Network name:', net_model_name)
-
+IMAGE_SIZE = (224, 224)
 #from settings import IMAGE_SIZE
-IMAGE_SIZE = (299, 299)
+#IMAGE_SIZE = (299, 299) 
+
 num_classes = settings.num_classes
 print('num_classes:', num_classes)
 
@@ -205,7 +206,7 @@ EPOCH 1: train_acc=0.1795 [top6=0.3852]; valid_acc=0.1840 [top6=0.3927]
 EPOCH 5: train_acc=0.3400 [top6=0.7028]; valid_acc=0.2802 [top6=0.5678]
 EPOCH 10: train_acc=0.6066 [top6=0.9249]; valid_acc=0.3785 [top6=0.7643]
 EPOCH 20: train_acc=0.8325 [top6=0.9869]; valid_acc=0.6048 [top6=0.9237]
-EPOCH 22: train_acc=0.8527 [top6=0.9899]; valid_acc=0.6353 [top6=0.9386]
+EPOCH 25: train_acc=0.8812 [top6=0.9933]; valid_acc=0.6762 [top6=0.9581]
 
 
 
