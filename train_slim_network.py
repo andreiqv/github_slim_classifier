@@ -31,10 +31,10 @@ from tensorflow.contrib.slim.nets import resnet_v2
 from tensorflow.contrib.slim.nets import vgg
 
 slim = tf.contrib.slim
-#net = inception.inception_v3
+net = inception.inception_v3
 #net = vgg.vgg_19
-net = resnet_v2.resnet_v2_50
-net_model_name = 'resnet'
+#net = resnet_v2.resnet_v2_50
+net_model_name = 'test'
 print('Network name:', net_model_name)
 #IMAGE_SIZE = (299, 299) 
 
