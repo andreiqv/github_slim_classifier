@@ -102,8 +102,8 @@ with graph.as_default():
 				try:
 					features, labels = sess.run(next_element_valid)
 					valid_acc, valid_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-					valid_acc_list += valid_acc
-					valid_acc_top6_list += valid_acc_top6
+					valid_acc_list += list(valid_acc)
+					valid_acc_top6_list += list(valid_acc_top6)
 					print('valid_acc_list:', valid_acc_list)
 					print('valid_acc_top6_list:', valid_acc_top6_list)					
 					if i%1 == 0:
