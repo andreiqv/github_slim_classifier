@@ -25,12 +25,13 @@ from utils.timer import timer
 #--
 # Select network
 #import models.inception_v3 as inception
-import tensorflow.contrib.slim.nets.inception.inception_v3 as inception_v3
-from tensorflow.contrib.slim.nets.vgg import vgg19, vgg16
+from tensorflow.contrib.slim.nets import inception
+from tensorflow.contrib.slim.nets import vgg
+
 slim = tf.contrib.slim
 #net = inception.inception_v3
-
-net_model_name = 'inception_v3'
+net = vgg.vgg19
+net_model_name = 'vgg19'
 print('Network name:', net_model_name)
 
 #from settings import IMAGE_SIZE
