@@ -83,7 +83,7 @@ with graph.as_default():
 	train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
 	correct_prediction = tf.equal(tf.argmax(logits,1), tf.argmax(y,1))
 	acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1	
-	acc_top6 = tf.reduce_mean(tf.nn.in_top_k(logits, tf.argmax(y,1), 6))
+	acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)
 		
 	
 	with tf.Session() as sess:
@@ -107,7 +107,7 @@ with graph.as_default():
 					print(type((valid_acc_top6)))
 					print('valid_acc_top6:', valid_acc_top6)
 					valid_acc_list.append(valid_acc)
-					valid_acc_top6_list.append(valid_acc_top6)
+					valid_acc_top6_list.append(np.mean(valid_acc_top6))
 					if i%1 == 0:
 						print('epoch={} i={}: valid_acc={:.4f} [top6={:.4f}]'.\
 							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
