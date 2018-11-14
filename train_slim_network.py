@@ -27,14 +27,16 @@ from utils.timer import timer
 from tensorflow.contrib.slim.nets import inception
 from tensorflow.contrib.slim.nets import resnet_v1, resnet_v2
 from tensorflow.contrib.slim.nets import vgg
+from tensorflow.contrib.slim.nets import mobilenet_v1
 
 slim = tf.contrib.slim
-net = inception.inception_v3
+#net = inception.inception_v3
 #net = inception.inception_v4
 #net = resnet_v2.resnet_v2_50
 #net = vgg.vgg_19
+net = mobilenet_v1.mobilenet_v1
 
-net_model_name = 'inception_v3'
+net_model_name = 'mobilenet_v1'
 print('Network name:', net_model_name)
 #IMAGE_SIZE = (299, 299) 
 OUTPUT_NODE = 'softmax'
@@ -168,10 +170,11 @@ with graph.as_default():
 			f_res.write(res)
 
 		
-			if epoch % epochs_checkpoint == 0:
+			if epoch % epochs_checkpoint == 0 and epoch > 1:
 				# save_checkpoints	
 				saver = tf.train.Saver()		
-				saver.save(sess, './saved_model/{0}'.format(checkpoint_name))  
+				saver.save(sess, './{}/{}'.\
+					format(dir_for_checkpoints, checkpoint_name))  
 
 				# SAVE GRAPH TO PB
 				graph = sess.graph			
