@@ -32,7 +32,7 @@ from tensorflow.contrib.slim.nets import vgg
 
 slim = tf.contrib.slim
 #net = inception.inception_v2
-net = resnet_v1.resnet_v1_101
+net = resnet_v2.resnet_v2_101
 #net = vgg.vgg_19
 net_model_name = 'test'
 print('Network name:', net_model_name)
@@ -44,7 +44,7 @@ print('IMAGE_SIZE:', IMAGE_SIZE)
 
 #--
 # for saving results
-results_filename = '_results.txt'
+results_filename = '_results_{}.txt'.format(net_model_name)
 f_res = open(results_filename, 'wt')
 dir_for_pb = 'pb'
 dir_for_checkpoints = 'checkpoints'
