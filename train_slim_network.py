@@ -95,7 +95,7 @@ with graph.as_default():
 
 	#input_tensor = keras.layers.Input(shape=(IMAGE_SIZE[0], IMAGE_SIZE[1], 3))
 	
-	x = tf.placeholder(tf.float32, [None, 299, 299, 3], name='input')
+	x = tf.placeholder(tf.float32, [None, IMAGE_SIZE[0], IMAGE_SIZE[1], 3], name='input')
 	y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
 	logits, end_points = net(x, num_classes=num_classes, is_training=True)
