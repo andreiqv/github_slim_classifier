@@ -18,6 +18,7 @@ from dataset_factory import GoodsDataset
 
 # tf.enable_eager_execution()
 import settings
+from settings import IMAGE_SIZE
 from utils.timer import timer
 
 #tf.enable_eager_execution()
@@ -35,12 +36,11 @@ slim = tf.contrib.slim
 net = resnet_v2.resnet_v2_50
 net_model_name = 'resnet'
 print('Network name:', net_model_name)
-IMAGE_SIZE = (224, 224)
-#from settings import IMAGE_SIZE
 #IMAGE_SIZE = (299, 299) 
 
 num_classes = settings.num_classes
 print('num_classes:', num_classes)
+print('IMAGE_SIZE:', IMAGE_SIZE)
 
 #--
 # for saving results
