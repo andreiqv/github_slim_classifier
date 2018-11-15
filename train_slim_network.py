@@ -28,15 +28,15 @@ from tensorflow.contrib.slim.nets import inception
 from tensorflow.contrib.slim.nets import resnet_v1, resnet_v2
 from tensorflow.contrib.slim.nets import vgg
 from nets import mobilenet_v1
-#from nets import mobilenet_v2
+from nets.mobilenet import mobilenet_v2
 
 slim = tf.contrib.slim
 #net = inception.inception_v3
 #net = inception.inception_v4
-net = resnet_v2.resnet_v2_50
+#net = resnet_v2.resnet_v2_50
 #net = vgg.vgg_19
 #net = mobilenet_v1.mobilenet_v1
-#net = mobilenet_v2.mobilenet
+net = mobilenet_v2.mobilenet
 
 net_model_name = 'resnet_v2_50'
 print('Network name:', net_model_name)
@@ -209,5 +209,21 @@ EPOCH 31: train_acc=0.9229 [top6=0.9972]; valid_acc=0.6625 [top6=0.9525]
 vgg_19: (1653.3062 sec. + 39) 224x224
 EPOCH 0: train_acc=0.1567 [top6=0.3003]; valid_acc=0.1644 [top6=0.3174]
 EPOCH 1: train_acc=0.1674 [top6=0.3843]; valid_acc=0.1653 [top6=0.3898]
+
+
+------
+https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v1.py
+
+https://github.com/tensorflow/models/tree/master/research/slim/nets/mobilenet
+
+README.md	1. Splits train_image_classifier into library and binary rule, to sim…	Jun 19, 2018
+__init__.py	Pulling internal changes to github (#3583)	Mar 13, 2018
+conv_blocks.py	Internal changes including PNASNet-5 mobile (#4895)	Jul 26, 2018
+madds_top1_accuracy.png	1. Splits train_image_classifier into library and binary rule, to sim…	Jun 19, 2018
+mnet_v1_vs_v2_pixel1_latency.png	PNasNet (#3736)	Mar 28, 2018
+mobilenet.py	Internal changes to slim and object detection (#4100)	May 1, 2018
+mobilenet_example.ipynb	Internal changes to slim and object detection (#4100)	May 1, 2018
+mobilenet_v2.py	Update slim and fix minor issue in object detection (#5354)	Sep 25, 2018
+mobilenet_v2_test.py Internal changes to slim and object detection (#4100)
 
 """
