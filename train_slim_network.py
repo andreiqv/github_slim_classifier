@@ -38,7 +38,7 @@ slim = tf.contrib.slim
 #net = mobilenet_v1.mobilenet_v1
 net = mobilenet_v2.mobilenet
 
-net_model_name = 'resnet_v2_50'
+net_model_name = 'mobilenet_v2-mobilenet'
 print('Network name:', net_model_name)
 #IMAGE_SIZE = (299, 299) 
 OUTPUT_NODE = 'softmax'
