@@ -53,7 +53,7 @@ print('IMAGE_SIZE:', IMAGE_SIZE)
 #--
 # for saving results
 results_filename = '_results_{}.txt'.format(net_model_name)
-f_res = open(results_filename, 'wt')
+f_res = open(results_filename, 'wt', buffering=0)
 dir_for_pb = 'pb'
 dir_for_checkpoints = 'checkpoints'
 checkpoint_name = net_model_name
