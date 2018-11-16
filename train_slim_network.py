@@ -129,7 +129,7 @@ with graph.as_default():
 					#train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
 					train_loss, train_acc, train_acc_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
 
-					train_loss_list.append(train_loss)
+					train_loss_list.append(np.mean(train_loss))
 					train_acc_list.append(train_acc)
 					train_acc_top6_list.append(np.mean(train_acc_top6))
 
