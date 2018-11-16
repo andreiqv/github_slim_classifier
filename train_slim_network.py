@@ -114,7 +114,7 @@ with graph.as_default():
 		sess.run(tf.global_variables_initializer())
 		
 		for epoch in range(num_epochs):
-			print('\nEPOCH {0}'.format(epoch))
+			print('\nEPOCH {}/{}'.format(epoch, num_epochs))
 
 			timer('train, epoch {0}'.format(epoch))
 			train_loss_list, train_acc_list, train_acc_top6_list = [], [], []
