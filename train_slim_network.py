@@ -68,7 +68,7 @@ settings.valid_percentage)
 train_dataset = goods_dataset.get_train_dataset()
 valid_dataset = goods_dataset.get_valid_dataset()
 
-num_epochs = 50
+num_epochs = 100
 epochs_checkpoint = 10 # saving checkpoints and pb-file 
 train_steps_per_epoch = 1157
 valid_steps_per_epoch = 77
@@ -84,8 +84,7 @@ def model_function(next_element):
 	return logits, loss
 """
 
-# Create a new graph
-graph = tf.Graph() # no necessiry
+graph = tf.Graph()  # сreate a new graph
 
 with graph.as_default():
 	
@@ -118,8 +117,7 @@ with graph.as_default():
 			print('\nEPOCH {0}'.format(epoch))
 
 			timer('train, epoch {0}'.format(epoch))
-			train_acc_list = []
-			train_acc_top6_list = []
+			train_loss_list, train_acc_list, train_acc_top6_list = [], [], []
 
 			for i in range(train_steps_per_epoch):
 				
@@ -128,13 +126,17 @@ with graph.as_default():
 					#print(i, labels[0])
 					sess.run(train_op, feed_dict={x: features, y: labels})
 					
-					train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-	
+					#train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
+					train_loss, train_acc, train_acc_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
+
+					train_loss_list.append(train_loss)
 					train_acc_list.append(train_acc)
 					train_acc_top6_list.append(np.mean(train_acc_top6))
+
 					if i % 100 == 0:
-						print('epoch={} i={}: train_acc={:.4f} [top6={:.4f}]'.\
-							format(epoch, i, np.mean(train_acc_list), np.mean(train_acc_top6_list)))
+						print('epoch={} i={}: train loss={:.4f}, acc={:.4f}, top6={:.4f}'.\
+							format(epoch, i, np.mean(train_loss_list), 
+							np.mean(train_acc_list), np.mean(train_acc_top6_list)))
 					
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
@@ -155,7 +157,7 @@ with graph.as_default():
 					valid_acc_list.append(valid_acc)
 					valid_acc_top6_list.append(np.mean(valid_acc_top6))
 					if i % 10 == 0:
-						print('epoch={} i={}: valid_acc={:.4f} [top6={:.4f}]'.\
+						print('epoch={} i={}: valid acc={:.4f}, top6={:.4f}'.\
 							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
 				except tf.errors.OutOfRangeError:
 					print("End of valid dataset.")
@@ -194,8 +196,6 @@ with graph.as_default():
 				pb_file_name = '{}_(ep={}_top1={:.4f}_top6={:.4f}).pb'.format(net_model_name, epoch, mean_valid_acc, mean_valid_acc_top6)
 				tf.train.write_graph(output_graph_def, dir_for_pb, pb_file_name, as_text=False)	
 			
-
-
 f_res.close()
 
 """
