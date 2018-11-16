@@ -53,7 +53,7 @@ print('IMAGE_SIZE:', IMAGE_SIZE)
 #--
 # for saving results
 results_filename = '_results_{}.txt'.format(net_model_name)
-f_res = open(results_filename, 'wt', buffering=0)
+f_res = open(results_filename, 'wt')
 dir_for_pb = 'pb'
 dir_for_checkpoints = 'checkpoints'
 checkpoint_name = net_model_name
@@ -175,6 +175,7 @@ with graph.as_default():
 					mean_valid_acc, mean_valid_acc_top6)
 			print(res)
 			f_res.write(res)
+			f_res.flush()
 
 		
 			if epoch % epochs_checkpoint == 0 and epoch > 1:
