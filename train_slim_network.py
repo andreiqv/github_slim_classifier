@@ -12,8 +12,6 @@ import tensorflow as tf
 import numpy as np
 import math
 import sys, os
-import matplotlib.pyplot as plt
-SHOW_PLOT = True
 
 from dataset_factory import GoodsDataset
 #from goods_tf_records import GoodsTfrecordsDataset
@@ -22,6 +20,10 @@ from dataset_factory import GoodsDataset
 import settings
 from settings import IMAGE_SIZE
 from utils.timer import timer
+
+SHOW_PLOT = True
+import matplotlib.pyplot as plt
+fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
 
 #--
 # Select network
@@ -151,6 +153,7 @@ with graph.as_default():
 
 			# valid
 			timer('valid, epoch {0}'.format(epoch))
+			valid_loss_list = []
 			valid_acc_list = []
 			valid_acc_top6_list = []			
 
@@ -158,8 +161,9 @@ with graph.as_default():
 				
 				try:
 					features, labels = sess.run(next_element_valid)
-					valid_acc, valid_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
+					valid_loss, valid_acc, valid_acc_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
 
+					valid_loss_list.append(np.mean(valid_loss))
 					valid_acc_list.append(valid_acc)
 					valid_acc_top6_list.append(np.mean(valid_acc_top6))
 					if i % 10 == 0:
@@ -173,6 +177,7 @@ with graph.as_default():
 
 			# result for each epoch
 			mean_train_loss = np.mean(train_loss_list)
+			mean_valid_loss = np.mean(valid_loss_list)
 			mean_train_acc = np.mean(train_acc_list)
 			mean_valid_acc = np.mean(valid_acc_list)
 			mean_train_acc_top6 = np.mean(train_acc_top6_list)
@@ -190,15 +195,15 @@ with graph.as_default():
 			results['train_acc'].append(mean_train_acc)
 			results['valid_acc'].append(mean_valid_acc)
 			results['train_top6'].append(mean_train_top6)
-			results['valid_top6'].append(mean_valid_top6)
-			if SHOW_PLOT:
-				plt.clf()
-				plt.plot(results['epoch'], results['train_loss'])
-				plt.plot(results['epoch'], results['valid_loss'])
-				plt.plot(results['epoch'], results['train_top6'])
-				plt.plot(results['epoch'], results['valid_top6'])
-				plt.legend(['train_loss', 'valid_loss', 'train_top6', 'valid_top6'], 
-					loc='upper left')
+			results['valid_top6'].append(mean_valid_top6)			
+			if SHOW_PLOT:	
+				fig.clf()
+				ax1.plot(results['epoch'], results['train_loss'])
+				ax1.plot(results['epoch'], results['valid_loss'])
+				ax1.legend(['train_loss', 'valid_loss'], loc='upper left')
+				ax2.plot(results['epoch'], results['train_top6'])
+				ax2.plot(results['epoch'], results['valid_top6'])
+				ax2.legend(['train_top6', 'valid_top6'], loc='upper left')
 				plt.show()
 
 			if epoch % epochs_checkpoint == 0 and epoch > 1:
