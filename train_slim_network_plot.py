@@ -49,7 +49,7 @@ net = simple_fc.fc
 #net = nasnet.build_nasnet_mobile
 
 #net_model_name = 'alexnet_v2'
-net = alexnet.alexnet_v2
+#net = alexnet.alexnet_v2
 
 
 #--------------
