@@ -22,48 +22,36 @@ from settings import IMAGE_SIZE
 from utils.timer import timer
 
 #--
+# Select network
 #import models.inception_v3 as inception
 from tensorflow.contrib.slim.nets import inception
 from tensorflow.contrib.slim.nets import resnet_v1, resnet_v2
 from tensorflow.contrib.slim.nets import vgg
-from tensorflow.contrib.slim.nets import alexnet
 from nets import mobilenet_v1
 from nets.mobilenet import mobilenet_v2
 from nets.nasnet import nasnet
 slim = tf.contrib.slim
 
-#-----------------
-# Select network
-
-from nets import simple_fc
-
-net_model_name = 'simple_fc'
-net = simple_fc.fc
 
 #net = inception.inception_v3
 #net = inception.inception_v4
 #net = resnet_v2.resnet_v2_50
 #net = vgg.vgg_19
 #net = mobilenet_v1.mobilenet_v1
-#net = mobilenet_v2.mobilenet_v2_035
-#net = nasnet.build_nasnet_mobile
+#net = mobilenet_v2.mobilenet
+net = nasnet.build_nasnet_mobile
 
-#net_model_name = 'alexnet_v2'
-net = alexnet.alexnet_v2
-
-
-#--------------
-
+net_model_name = 'nasnet_mobile'
+print('Network name:', net_model_name)
+#IMAGE_SIZE = (299, 299) 
 OUTPUT_NODE = 'softmax'
+
 num_classes = settings.num_classes
 print('num_classes:', num_classes)
-print('IMAGE_SIZE:', IMAGE_SIZE) #IMAGE_SIZE = (299, 299) 
-print('Network name:', net_model_name)
+print('IMAGE_SIZE:', IMAGE_SIZE)
 
 #--
 # for saving results
-results = {'epoch':[], 'train_loss':[], 'valid_loss':[], 'train_acc':[],\
-	'valid_acc':[], 'train_top6':[], 'valid_top6':[]}
 results_filename = '_results_{}.txt'.format(net_model_name)
 f_res = open(results_filename, 'wt')
 dir_for_pb = 'pb'
@@ -72,34 +60,6 @@ checkpoint_name = net_model_name
 os.system('mkdir -p {}'.format(dir_for_pb))
 os.system('mkdir -p {}'.format(dir_for_checkpoints))
 
-
-#--
-# plotting
-SHOW_PLOT = True
-import _thread
-import matplotlib.pyplot as plt
-fig = plt.figure(figsize=(10, 5))
-ax1 = fig.add_subplot(121)
-ax2 = fig.add_subplot(122)
-fig.suptitle(net_model_name, fontsize=16)
-
-def plot_figure():
-	ax1.cla()
-	ax1.plot(results['epoch'], results['train_loss'])
-	ax1.plot(results['epoch'], results['valid_loss'])
-	ax1.legend(['train_loss', 'valid_loss'], loc='upper right')
-	ax1.set_ylim(0, 3)
-	ax2.cla()
-	ax2.plot(results['epoch'], results['train_top6'])
-	ax2.plot(results['epoch'], results['valid_top6'])
-	ax2.legend(['train_top6', 'valid_top6'], loc='upper left')
-	ax2.set_ylim(0, 1)
-	#plt.show()
-	outfile = '_results/{}.png'.format(net_model_name)
-	plt.savefig(outfile)
-
-
-#------------
 # dataset
 goods_dataset = GoodsDataset(settings.dataset_list, settings.labels_list, 
 settings.IMAGE_SIZE, settings.train_batch, settings.valid_batch, settings.multiply, 
@@ -107,15 +67,6 @@ settings.valid_percentage)
 
 train_dataset = goods_dataset.get_train_dataset()
 valid_dataset = goods_dataset.get_valid_dataset()
-
-num_epochs = 400
-epochs_checkpoint = 20 # saving checkpoints and pb-file 
-train_steps_per_epoch = 1157
-valid_steps_per_epoch = 77
-#train_steps_per_epoch = 1157
-#valid_steps_per_epoch = 77
-train_dataset = train_dataset.repeat()
-valid_dataset = valid_dataset.repeat()
 
 """
 def model_function(next_element):
@@ -156,10 +107,11 @@ with graph.as_default():
 		sess.run(tf.global_variables_initializer())
 		
 		for epoch in range(num_epochs):
-			print('\nEPOCH {}/{}'.format(epoch, num_epochs))
+			print('\nEPOCH {0}'.format(epoch))
 
 			timer('train, epoch {0}'.format(epoch))
-			train_loss_list, train_acc_list, train_acc_top6_list = [], [], []
+			train_acc_list = []
+			train_acc_top6_list = []
 
 			for i in range(train_steps_per_epoch):
 				
@@ -168,17 +120,13 @@ with graph.as_default():
 					#print(i, labels[0])
 					sess.run(train_op, feed_dict={x: features, y: labels})
 					
-					#train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-					train_loss, train_acc, train_acc_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
-
-					train_loss_list.append(np.mean(train_loss))
+					train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
+	
 					train_acc_list.append(train_acc)
 					train_acc_top6_list.append(np.mean(train_acc_top6))
-
 					if i % 100 == 0:
-						print('epoch={} i={}: train loss={:.4f}, acc={:.4f}, top6={:.4f}'.\
-							format(epoch, i, np.mean(train_loss_list), 
-							np.mean(train_acc_list), np.mean(train_acc_top6_list)))
+						print('epoch={} i={}: train_acc={:.4f} [top6={:.4f}]'.\
+							format(epoch, i, np.mean(train_acc_list), np.mean(train_acc_top6_list)))
 					
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
@@ -187,7 +135,6 @@ with graph.as_default():
 
 			# valid
 			timer('valid, epoch {0}'.format(epoch))
-			valid_loss_list = []
 			valid_acc_list = []
 			valid_acc_top6_list = []			
 
@@ -195,13 +142,12 @@ with graph.as_default():
 				
 				try:
 					features, labels = sess.run(next_element_valid)
-					valid_loss, valid_acc, valid_acc_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
+					valid_acc, valid_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
 
-					valid_loss_list.append(np.mean(valid_loss))
 					valid_acc_list.append(valid_acc)
 					valid_acc_top6_list.append(np.mean(valid_acc_top6))
 					if i % 10 == 0:
-						print('epoch={} i={}: valid acc={:.4f}, top6={:.4f}'.\
+						print('epoch={} i={}: valid_acc={:.4f} [top6={:.4f}]'.\
 							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
 				except tf.errors.OutOfRangeError:
 					print("End of valid dataset.")
@@ -209,31 +155,18 @@ with graph.as_default():
 			
 			timer()
 
-			# result for each epoch
-			mean_train_loss = np.mean(train_loss_list)
-			mean_valid_loss = np.mean(valid_loss_list)
+			# result for current epoch
 			mean_train_acc = np.mean(train_acc_list)
+			mean_train_acc_top6 = np.mean(train_acc_top6_list)
 			mean_valid_acc = np.mean(valid_acc_list)
-			mean_train_top6 = np.mean(train_acc_top6_list)
-			mean_valid_top6 = np.mean(valid_acc_top6_list)
-			res = 'EPOCH {}: TRAIN loss={:.4f} acc={:.4f} top6={:.4f}]; VALID loss={:.4f} acc={:.4f} top6={:.4f}\n'.\
-				format(epoch, mean_train_loss, mean_train_acc, mean_train_top6,
-					mean_valid_loss, mean_valid_acc, mean_valid_top6)
+			mean_valid_acc_top6 = np.mean(valid_acc_top6_list)
+			res = 'EPOCH {}: train_acc={:.4f} [top6={:.4f}]; valid_acc={:.4f} [top6={:.4f}]\n'.\
+				format(epoch, mean_train_acc, mean_train_acc_top6,
+					mean_valid_acc, mean_valid_acc_top6)
 			print(res)
 			f_res.write(res)
-			f_res.flush()
 
-			results['epoch'].append(epoch)
-			results['train_loss'].append(mean_train_loss)
-			results['valid_loss'].append(mean_valid_loss)
-			results['train_acc'].append(mean_train_acc)
-			results['valid_acc'].append(mean_valid_acc)
-			results['train_top6'].append(mean_train_top6)
-			results['valid_top6'].append(mean_valid_top6)			
-			if SHOW_PLOT:
-				plot_figure()
-				#_thread.start_new_thread(plot_figure, ())
-
+		
 			if epoch % epochs_checkpoint == 0 and epoch > 1:
 				# save_checkpoints	
 				saver = tf.train.Saver()		
@@ -253,6 +186,8 @@ with graph.as_default():
 				pb_file_name = '{}_(ep={}_top1={:.4f}_top6={:.4f}).pb'.format(net_model_name, epoch, mean_valid_acc, mean_valid_acc_top6)
 				tf.train.write_graph(output_graph_def, dir_for_pb, pb_file_name, as_text=False)	
 			
+
+
 f_res.close()
 
 """
