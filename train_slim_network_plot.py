@@ -222,7 +222,7 @@ with graph.as_default():
 			results['train_top6'].append(mean_train_top6)
 			results['valid_top6'].append(mean_valid_top6)			
 			if SHOW_PLOT:	
-				_thread.start_new_thread(plot_figure)
+				_thread.start_new_thread(plot_figure, ())
 
 			if epoch % epochs_checkpoint == 0 and epoch > 1:
 				# save_checkpoints	
