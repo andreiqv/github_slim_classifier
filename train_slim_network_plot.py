@@ -36,7 +36,6 @@ slim = tf.contrib.slim
 # Select network
 
 from nets import simple_fc
-
 net_model_name = 'simple_fc'
 net = simple_fc.fc
 
@@ -48,9 +47,12 @@ net = simple_fc.fc
 #net = mobilenet_v2.mobilenet_v2_035
 #net = nasnet.build_nasnet_mobile
 
+
 #net_model_name = 'alexnet_v2'
 #net = alexnet.alexnet_v2
 
+net_model_name = 'resnet_v2_152'
+net = resnet_v2.resnet_v2_152
 
 #--------------
 
@@ -216,7 +218,7 @@ with graph.as_default():
 			mean_valid_acc = np.mean(valid_acc_list)
 			mean_train_top6 = np.mean(train_acc_top6_list)
 			mean_valid_top6 = np.mean(valid_acc_top6_list)
-			res = 'EPOCH {}: TRAIN loss={:.4f} acc={:.4f} top6={:.4f}]; VALID loss={:.4f} acc={:.4f} top6={:.4f}\n'.\
+			res = 'EPOCH {}: TRAIN loss={:.4f} acc={:.4f} top6={:.4f}; VALID loss={:.4f} acc={:.4f} top6={:.4f}\n'.\
 				format(epoch, mean_train_loss, mean_train_acc, mean_train_top6,
 					mean_valid_loss, mean_valid_acc, mean_valid_top6)
 			print(res)
