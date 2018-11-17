@@ -23,7 +23,9 @@ from utils.timer import timer
 
 SHOW_PLOT = True
 import matplotlib.pyplot as plt
-fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
+fig = plt.figure(figsize=(10, 5))
+ax1 = fig.add_subplot(121)
+ax2 = fig.add_subplot(122)
 
 #--
 # Select network
@@ -180,11 +182,11 @@ with graph.as_default():
 			mean_valid_loss = np.mean(valid_loss_list)
 			mean_train_acc = np.mean(train_acc_list)
 			mean_valid_acc = np.mean(valid_acc_list)
-			mean_train_acc_top6 = np.mean(train_acc_top6_list)
-			mean_valid_acc_top6 = np.mean(valid_acc_top6_list)
-			res = 'EPOCH {}: TRAIN loss={:.4f} acc={:.4f} top6={:.4f}]; VALID acc={:.4f} top6={:.4f}\n'.\
-				format(epoch, mean_train_loss, mean_train_acc, mean_train_acc_top6,
-					mean_valid_acc, mean_valid_acc_top6)
+			mean_train_top6 = np.mean(train_acc_top6_list)
+			mean_valid_top6 = np.mean(valid_acc_top6_list)
+			res = 'EPOCH {}: TRAIN loss={:.4f} acc={:.4f} top6={:.4f}]; VALID loss={:.4f} acc={:.4f} top6={:.4f}\n'.\
+				format(epoch, mean_train_loss, mean_train_acc, mean_train_top6,
+					mean_valid_loss, mean_valid_acc, mean_valid_top6)
 			print(res)
 			f_res.write(res)
 			f_res.flush()
@@ -201,10 +203,12 @@ with graph.as_default():
 				ax1.plot(results['epoch'], results['train_loss'])
 				ax1.plot(results['epoch'], results['valid_loss'])
 				ax1.legend(['train_loss', 'valid_loss'], loc='upper left')
+				ax2.set_ylim(0, 3)
 				ax2.cla()
 				ax2.plot(results['epoch'], results['train_top6'])
 				ax2.plot(results['epoch'], results['valid_top6'])
 				ax2.legend(['train_top6', 'valid_top6'], loc='upper left')
+				ax2.set_ylim(0, 1)
 				plt.show()
 
 			if epoch % epochs_checkpoint == 0 and epoch > 1:
