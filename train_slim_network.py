@@ -21,14 +21,7 @@ import settings
 from settings import IMAGE_SIZE
 from utils.timer import timer
 
-SHOW_PLOT = True
-import matplotlib.pyplot as plt
-fig = plt.figure(figsize=(10, 5))
-ax1 = fig.add_subplot(121)
-ax2 = fig.add_subplot(122)
-
 #--
-# Select network
 #import models.inception_v3 as inception
 from tensorflow.contrib.slim.nets import inception
 from tensorflow.contrib.slim.nets import resnet_v1, resnet_v2
@@ -38,6 +31,8 @@ from nets.mobilenet import mobilenet_v2
 from nets.nasnet import nasnet
 slim = tf.contrib.slim
 
+#-----------------
+# Select network
 
 net_model_name = 'mobilenet_v2_035'
 #net = inception.inception_v3
@@ -48,15 +43,22 @@ net_model_name = 'mobilenet_v2_035'
 net = mobilenet_v2.mobilenet_v2_035
 #net = nasnet.build_nasnet_mobile
 
+#--------------
 
-
-print('Network name:', net_model_name)
-#IMAGE_SIZE = (299, 299) 
 OUTPUT_NODE = 'softmax'
-
 num_classes = settings.num_classes
 print('num_classes:', num_classes)
-print('IMAGE_SIZE:', IMAGE_SIZE)
+print('IMAGE_SIZE:', IMAGE_SIZE) #IMAGE_SIZE = (299, 299) 
+print('Network name:', net_model_name)
+
+#--
+# plotting
+SHOW_PLOT = True
+import matplotlib.pyplot as plt
+fig = plt.figure(figsize=(10, 5))
+ax1 = fig.add_subplot(121)
+ax2 = fig.add_subplot(122)
+fig.suptitle(net_model_name, fontsize=16)
 
 #--
 # for saving results
@@ -202,8 +204,8 @@ with graph.as_default():
 				ax1.cla()
 				ax1.plot(results['epoch'], results['train_loss'])
 				ax1.plot(results['epoch'], results['valid_loss'])
-				ax1.legend(['train_loss', 'valid_loss'], loc='upper left')
-				ax2.set_ylim(0, 3)
+				ax1.legend(['train_loss', 'valid_loss'], loc='upper right')
+				ax1.set_ylim(0, 3)
 				ax2.cla()
 				ax2.plot(results['epoch'], results['train_top6'])
 				ax2.plot(results['epoch'], results['valid_top6'])
