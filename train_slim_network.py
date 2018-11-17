@@ -12,6 +12,8 @@ import tensorflow as tf
 import numpy as np
 import math
 import sys, os
+import matplotlib.pyplot as plt
+SHOW_PLOT = True
 
 from dataset_factory import GoodsDataset
 #from goods_tf_records import GoodsTfrecordsDataset
@@ -33,15 +35,17 @@ from nets.nasnet import nasnet
 slim = tf.contrib.slim
 
 
+net_model_name = 'mobilenet_v2_035'
 #net = inception.inception_v3
 #net = inception.inception_v4
 #net = resnet_v2.resnet_v2_50
 #net = vgg.vgg_19
 #net = mobilenet_v1.mobilenet_v1
-#net = mobilenet_v2.mobilenet
-net = nasnet.build_nasnet_mobile
+net = mobilenet_v2.mobilenet_v2_035
+#net = nasnet.build_nasnet_mobile
 
-net_model_name = 'nasnet_mobile'
+
+
 print('Network name:', net_model_name)
 #IMAGE_SIZE = (299, 299) 
 OUTPUT_NODE = 'softmax'
@@ -52,6 +56,8 @@ print('IMAGE_SIZE:', IMAGE_SIZE)
 
 #--
 # for saving results
+results = {'epoch':[], 'train_loss':[], 'valid_loss':[], 'train_acc':[],\
+	'valid_acc':[], 'train_top6':[], 'valid_top6':[]}
 results_filename = '_results_{}.txt'.format(net_model_name)
 f_res = open(results_filename, 'wt')
 dir_for_pb = 'pb'
@@ -165,19 +171,36 @@ with graph.as_default():
 			
 			timer()
 
-			# result for current epoch
+			# result for each epoch
+			mean_train_loss = np.mean(train_loss_list)
 			mean_train_acc = np.mean(train_acc_list)
-			mean_train_acc_top6 = np.mean(train_acc_top6_list)
 			mean_valid_acc = np.mean(valid_acc_list)
+			mean_train_acc_top6 = np.mean(train_acc_top6_list)
 			mean_valid_acc_top6 = np.mean(valid_acc_top6_list)
-			res = 'EPOCH {}: train_acc={:.4f} [top6={:.4f}]; valid_acc={:.4f} [top6={:.4f}]\n'.\
-				format(epoch, mean_train_acc, mean_train_acc_top6,
+			res = 'EPOCH {}: TRAIN loss={:.4f} acc={:.4f} top6={:.4f}]; VALID acc={:.4f} top6={:.4f}\n'.\
+				format(epoch, mean_train_loss, mean_train_acc, mean_train_acc_top6,
 					mean_valid_acc, mean_valid_acc_top6)
 			print(res)
 			f_res.write(res)
 			f_res.flush()
 
-		
+			results['epoch'].append(epoch)
+			results['train_loss'].append(mean_train_loss)
+			results['valid_loss'].append(mean_valid_loss)
+			results['train_acc'].append(mean_train_acc)
+			results['valid_acc'].append(mean_valid_acc)
+			results['train_top6'].append(mean_train_top6)
+			results['valid_top6'].append(mean_valid_top6)
+			if SHOW_PLOT:
+				plt.clf()
+				plt.plot(results['epoch'], results['train_loss'])
+				plt.plot(results['epoch'], results['valid_loss'])
+				plt.plot(results['epoch'], results['train_top6'])
+				plt.plot(results['epoch'], results['valid_top6'])
+				plt.legend(['train_loss', 'valid_loss', 'train_top6', 'valid_top6'], 
+					loc='upper left')
+				plt.show()
+
 			if epoch % epochs_checkpoint == 0 and epoch > 1:
 				# save_checkpoints	
 				saver = tf.train.Saver()		
