@@ -197,10 +197,11 @@ with graph.as_default():
 			results['train_top6'].append(mean_train_top6)
 			results['valid_top6'].append(mean_valid_top6)			
 			if SHOW_PLOT:	
-				fig.clf()
+				ax1.cla()
 				ax1.plot(results['epoch'], results['train_loss'])
 				ax1.plot(results['epoch'], results['valid_loss'])
 				ax1.legend(['train_loss', 'valid_loss'], loc='upper left')
+				ax2.cla()
 				ax2.plot(results['epoch'], results['train_top6'])
 				ax2.plot(results['epoch'], results['valid_top6'])
 				ax2.legend(['train_top6', 'valid_top6'], loc='upper left')
