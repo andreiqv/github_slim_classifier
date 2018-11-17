@@ -35,7 +35,7 @@ slim = tf.contrib.slim
 #-----------------
 # Select network
 
-net_model_name = 'mobilenet_v2_035'
+net_model_name = 'alexnet_v2'
 #net = inception.inception_v3
 #net = inception.inception_v4
 #net = resnet_v2.resnet_v2_50
