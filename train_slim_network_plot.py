@@ -85,17 +85,19 @@ ax1 = fig.add_subplot(121)
 ax2 = fig.add_subplot(122)
 fig.suptitle(net_model_name, fontsize=16)
 
-def plot_figure():
+def plot_figure(results, ax1, ax2):
 	ax1.cla()
 	ax1.plot(results['epoch'], results['train_loss'])
 	ax1.plot(results['epoch'], results['valid_loss'])
 	ax1.legend(['train_loss', 'valid_loss'], loc='upper right')
-	ax1.set_ylim(0, 3)
+	ax1.grid(color='g', linestyle='-', linewidth=0.2)
+	ax1.set_ylim(0, 3.0)
 	ax2.cla()
 	ax2.plot(results['epoch'], results['train_top6'])
 	ax2.plot(results['epoch'], results['valid_top6'])
 	ax2.legend(['train_top6', 'valid_top6'], loc='upper left')
-	ax2.set_ylim(0, 1)
+	ax2.grid(color='g', linestyle='-', linewidth=0.2)
+	ax2.set_ylim(0.6, 1.0)
 	#plt.show()
 	outfile = '_results/{}.png'.format(net_model_name)
 	plt.savefig(outfile)
@@ -233,7 +235,7 @@ with graph.as_default():
 			results['train_top6'].append(mean_train_top6)
 			results['valid_top6'].append(mean_valid_top6)			
 			if SHOW_PLOT:
-				plot_figure()
+				plot_figure(results, ax1, ax2)
 				#_thread.start_new_thread(plot_figure, ())
 
 			if epoch % epochs_checkpoint == 0 and epoch > 1:
