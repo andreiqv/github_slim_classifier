@@ -136,7 +136,9 @@ def createParser ():
 	#parser.add_argument('-r', '--restore', dest='restore', action='store_true')
 	parser.add_argument('-rc', '--restore_checkpoint', default=None, type=str, help='Restore from checkpoints')
 
+
 if __name__ == '__main__':
+
 	parser = createParser()
 	arguments = parser.parse_args(sys.argv[1:])	
 
@@ -169,7 +171,7 @@ if __name__ == '__main__':
 		with tf.Session() as sess:
 			sess.run(tf.global_variables_initializer())
 
-			if arguments.restore_checkpoint:		
+			if arguments.restore_checkpoint in not None:		
 				tf.train.Saver().restore(sess, './{}/{}'.\
 					format(dir_for_checkpoints, arguments.restore_checkpoint))			
 
