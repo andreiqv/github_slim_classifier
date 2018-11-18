@@ -294,5 +294,15 @@ resnet_v2_50:
 resnet_v2_152:
 10: TRAIN loss=0.2988 acc=0.9453 top6=0.9972; VALID loss=0.9972 acc=0.6909 top6=0.9586
 20: TRAIN loss=0.0969 acc=0.9907 top6=0.9999; VALID loss=0.8622 acc=0.7437 top6=0.9630
+
+
+------
+influence of augmentation:
+resnet_v2_50
+1) no augment.:   EPOCH 20: TRAIN loss=0.0586 acc=0.9971 top6=1.0000; VALID loss=1.0276 acc=0.7062 top6=0.9551
+2) no transform: 
+3) with augment.:
+
+
 ------
 """
