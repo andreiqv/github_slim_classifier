@@ -97,7 +97,7 @@ def plot_figure(results, ax1, ax2):
 	ax2.plot(results['epoch'], results['valid_top6'])
 	ax2.legend(['train_top6', 'valid_top6'], loc='upper left')
 	ax2.grid(color='g', linestyle='-', linewidth=0.2)
-	ax2.set_ylim(0.6, 1.0)
+	ax2.set_ylim(0.8, 1.0)
 	#plt.show()
 	outfile = '_results/{}.png'.format(net_model_name)
 	plt.savefig(outfile)
@@ -114,10 +114,10 @@ valid_dataset = goods_dataset.get_valid_dataset()
 
 num_epochs = 400
 epochs_checkpoint = 20 # saving checkpoints and pb-file 
-train_steps_per_epoch = 1157
-valid_steps_per_epoch = 77
 #train_steps_per_epoch = 1157
 #valid_steps_per_epoch = 77
+train_steps_per_epoch = 115
+valid_steps_per_epoch = 12
 train_dataset = train_dataset.repeat()
 valid_dataset = valid_dataset.repeat()
 
@@ -163,7 +163,7 @@ with graph.as_default():
 			print('\nEPOCH {}/{}'.format(epoch, num_epochs))
 
 			timer('train, epoch {0}'.format(epoch))
-			train_loss_list, train_acc_list, train_acc_top6_list = [], [], []
+			train_loss_list, train_acc_list, train_top6_list = [], [], []
 
 			for i in range(train_steps_per_epoch):
 				
@@ -173,16 +173,16 @@ with graph.as_default():
 					sess.run(train_op, feed_dict={x: features, y: labels})
 					
 					#train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-					train_loss, train_acc, train_acc_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
+					train_loss, train_acc, train_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
 
 					train_loss_list.append(np.mean(train_loss))
 					train_acc_list.append(train_acc)
-					train_acc_top6_list.append(np.mean(train_acc_top6))
+					train_top6_list.append(np.mean(train_top6))
 
 					if i % 100 == 0:
 						print('epoch={} i={}: train loss={:.4f}, acc={:.4f}, top6={:.4f}'.\
 							format(epoch, i, np.mean(train_loss_list), 
-							np.mean(train_acc_list), np.mean(train_acc_top6_list)))
+							np.mean(train_acc_list), np.mean(train_top6_list)))
 					
 				except tf.errors.OutOfRangeError:
 					print("End of training dataset.")
@@ -193,20 +193,20 @@ with graph.as_default():
 			timer('valid, epoch {0}'.format(epoch))
 			valid_loss_list = []
 			valid_acc_list = []
-			valid_acc_top6_list = []			
+			valid_top6_list = []			
 
 			for i in range(valid_steps_per_epoch):
 				
 				try:
 					features, labels = sess.run(next_element_valid)
-					valid_loss, valid_acc, valid_acc_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
+					valid_loss, valid_acc, valid_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
 
 					valid_loss_list.append(np.mean(valid_loss))
 					valid_acc_list.append(valid_acc)
-					valid_acc_top6_list.append(np.mean(valid_acc_top6))
+					valid_top6_list.append(np.mean(valid_top6))
 					if i % 10 == 0:
 						print('epoch={} i={}: valid acc={:.4f}, top6={:.4f}'.\
-							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_acc_top6_list)))
+							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_top6_list)))
 				except tf.errors.OutOfRangeError:
 					print("End of valid dataset.")
 					break
@@ -218,8 +218,8 @@ with graph.as_default():
 			mean_valid_loss = np.mean(valid_loss_list)
 			mean_train_acc = np.mean(train_acc_list)
 			mean_valid_acc = np.mean(valid_acc_list)
-			mean_train_top6 = np.mean(train_acc_top6_list)
-			mean_valid_top6 = np.mean(valid_acc_top6_list)
+			mean_train_top6 = np.mean(train_top6_list)
+			mean_valid_top6 = np.mean(valid_top6_list)
 			res = 'EPOCH {}: TRAIN loss={:.4f} acc={:.4f} top6={:.4f}; VALID loss={:.4f} acc={:.4f} top6={:.4f}\n'.\
 				format(epoch, mean_train_loss, mean_train_acc, mean_train_top6,
 					mean_valid_loss, mean_valid_acc, mean_valid_top6)
@@ -254,7 +254,7 @@ with graph.as_default():
 				output_graph_def = tf.graph_util.convert_variables_to_constants(
 					sess, graph.as_graph_def(), output_node_names)
 				# save graph:		
-				pb_file_name = '{}_(ep={}_top1={:.4f}_top6={:.4f}).pb'.format(net_model_name, epoch, mean_valid_acc, mean_valid_acc_top6)
+				pb_file_name = '{}_(ep={}_acc={:.4f}_top6={:.4f}).pb'.format(net_model_name, epoch, mean_valid_acc, mean_valid_top6)
 				tf.train.write_graph(output_graph_def, dir_for_pb, pb_file_name, as_text=False)	
 			
 f_res.close()
