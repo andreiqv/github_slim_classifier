@@ -36,8 +36,11 @@ slim = tf.contrib.slim
 # Select network
 
 from nets import simple_fc
-net_model_name = 'simple_fc'
-net = simple_fc.fc
+#net_model_name = 'simple_fc'
+#net = simple_fc.fc
+
+net_model_name = 'alexnet_v2'
+net = alexnet.alexnet_v2
 
 #net = inception.inception_v3
 #net = inception.inception_v4
@@ -46,10 +49,6 @@ net = simple_fc.fc
 #net = mobilenet_v1.mobilenet_v1
 #net = mobilenet_v2.mobilenet_v2_035
 #net = nasnet.build_nasnet_mobile
-
-
-#net_model_name = 'alexnet_v2'
-#net = alexnet.alexnet_v2
 
 #net_model_name = 'resnet_v2_152'
 #net = resnet_v2.resnet_v2_152
@@ -97,9 +96,11 @@ def plot_figure(results, ax1, ax2):
 	ax2.plot(results['epoch'], results['valid_top6'])
 	ax2.legend(['train_top6', 'valid_top6'], loc='upper left')
 	ax2.grid(color='g', linestyle='-', linewidth=0.2)
-	ax2.set_ylim(0.8, 1.0)
+	ymaxval = max(results['valid_top6'])
+	ymin = 0.9 if ymaxval > 0.95 else (0.8 if ymaxval > 0.85 else 0.6)
+	ax2.set_ylim(ymin, 1.0)
 	#plt.show()
-	outfile = '_results/{}.png'.format(net_model_name)
+	outfile = '_plot_[{}].png'.format(net_model_name)
 	plt.savefig(outfile)
 
 
