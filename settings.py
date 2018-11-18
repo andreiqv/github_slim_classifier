@@ -12,7 +12,7 @@ labels_list = 'dataset-181018.labels'
 dataset_order = 'shuffle' 
 # a1 and b0 coeff. (max values), see https://www.tensorflow.org/api_docs/python/tf/contrib/image/transform
 
-do_transformations = False # rotation and affine transformation
+do_transformations = True # rotation and affine transformation
 transform_maxval = 0.2 
 rotation_max_angle = 90
 
