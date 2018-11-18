@@ -49,7 +49,7 @@ with graph.as_default():
 				features, labels = sess.run(next_element_train)
 				train_count += 1
 				if train_count % 20 == 0:
-					print(train_count)				
+					print('train_count', train_count)				
 			except tf.errors.OutOfRangeError:
 				print("End of training dataset. Count={} batches".format(train_count))
 				break	
@@ -60,7 +60,7 @@ with graph.as_default():
 				features, labels = sess.run(next_element_valid)
 				valid_count += 1	
 				if valid_count % 20 == 0:
-					print(valid_count)								
+					print('valid_count', valid_count)								
 			except tf.errors.OutOfRangeError:
 				print("End of validation dataset. Count={} batches".format(valid_count))
 				break	

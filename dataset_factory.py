@@ -233,8 +233,7 @@ class GoodsDataset:
             # angle = tf.random_uniform(shape=(1,), minval=0, maxval=90)
             # images = tf.contrib.image.rotate(images, angle * math.pi / 180, interpolation='BILINEAR')
 
-            DO_TRANSFORM = False
-            if DO_TRANSFORM:
+            if settings.do_transformations:
                 # Rotation and transformation
                 # print(images.shape)  # = (?, 299, 299, ?)
                 print('images.shape:', images.shape)      
@@ -279,7 +278,7 @@ class GoodsDataset:
                 images = tf.image.resize_images(images, [h, w])            
                 # ---
                 # end of Rotation and Transformation block   
-                     
+
             images = tf.image.random_hue(images, max_delta=0.05)
             images = tf.image.random_contrast(images, lower=0.9, upper=1.5)
             images = tf.image.random_brightness(images, max_delta=0.1)

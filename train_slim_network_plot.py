@@ -36,15 +36,13 @@ slim = tf.contrib.slim
 # Select network
 
 from nets import simple_fc
-#net_model_name = 'simple_fc'
-#net = simple_fc.fc
+#net, net_model_name = simple_fc.fc, 'simple_fc'
+#net, net_model_name = alexnet.alexnet_v2, 'alexnet_v2'
 
-net_model_name = 'alexnet_v2'
-net = alexnet.alexnet_v2
+net, net_model_name = resnet_v2.resnet_v2_50, 'resnet_v2_50_(no_transform)'
 
 #net = inception.inception_v3
 #net = inception.inception_v4
-#net = resnet_v2.resnet_v2_50
 #net = vgg.vgg_19
 #net = mobilenet_v1.mobilenet_v1
 #net = mobilenet_v2.mobilenet_v2_035
@@ -115,8 +113,8 @@ valid_dataset = goods_dataset.get_valid_dataset()
 
 num_epochs = 200
 epochs_checkpoint = 10 # saving checkpoints and pb-file 
-train_steps_per_epoch = 1157
-valid_steps_per_epoch = 77
+train_steps_per_epoch = 905 #1157
+valid_steps_per_epoch = 78  #77
 train_dataset = train_dataset.repeat()
 valid_dataset = valid_dataset.repeat()
 
