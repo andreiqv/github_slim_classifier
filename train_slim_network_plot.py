@@ -113,12 +113,10 @@ settings.valid_percentage)
 train_dataset = goods_dataset.get_train_dataset()
 valid_dataset = goods_dataset.get_valid_dataset()
 
-num_epochs = 400
-epochs_checkpoint = 2 # saving checkpoints and pb-file 
-#train_steps_per_epoch = 1157
-#valid_steps_per_epoch = 77
-train_steps_per_epoch = 115
-valid_steps_per_epoch = 12
+num_epochs = 200
+epochs_checkpoint = 10 # saving checkpoints and pb-file 
+train_steps_per_epoch = 1157
+valid_steps_per_epoch = 77
 train_dataset = train_dataset.repeat()
 valid_dataset = valid_dataset.repeat()
 
