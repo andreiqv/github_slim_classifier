@@ -171,7 +171,7 @@ if __name__ == '__main__':
 		with tf.Session() as sess:
 			sess.run(tf.global_variables_initializer())
 
-			if arguments.restore_checkpoint in not None:		
+			if arguments.restore_checkpoint is not None:		
 				tf.train.Saver().restore(sess, './{}/{}'.\
 					format(dir_for_checkpoints, arguments.restore_checkpoint))			
 
