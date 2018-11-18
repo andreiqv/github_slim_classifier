@@ -127,133 +127,149 @@ def model_function(next_element):
 	return logits, loss
 """
 
-graph = tf.Graph()  # сreate a new graph
 
-with graph.as_default():
-	
-	iterator_train = train_dataset.make_one_shot_iterator()
-	next_element_train = iterator_train.get_next()
-	iterator_valid = valid_dataset.make_one_shot_iterator()
-	next_element_valid = iterator_valid.get_next()
+def createParser ():
+	"""	ArgumentParser
+	"""
+	parser = argparse.ArgumentParser()
+	#parser.add_argument('-r', '--restore', dest='restore', action='store_true')
+	parser.add_argument('-rc', '--restore_checkpoint', default=None, type=str, help='Restore from checkpoints')
 
-	#iterator_train = train_dataset.make_initializable_iterator()
-	#x, y = next_element_train
+if __name__ == '__main__':
+	parser = createParser()
+	arguments = parser.parse_args(sys.argv[1:])	
 
-	x = tf.placeholder(tf.float32, [None, IMAGE_SIZE[0], IMAGE_SIZE[1], 3], name='input')
-	y = tf.placeholder(tf.float32, [None, num_classes], name='y')
+	graph = tf.Graph()  # сreate a new graph
 
-	logits, end_points = net(x, num_classes=num_classes, is_training=True)
-	logits = tf.reshape(logits, [-1, num_classes])
-	output = tf.nn.softmax(logits, name=OUTPUT_NODE)
-
-	loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
-	train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
-	correct_prediction = tf.equal(tf.argmax(logits,1), tf.argmax(y,1))
-	acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1 - mean value	
-	acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)  # list values for batch.
+	with graph.as_default():
 		
-	
-	with tf.Session() as sess:
-		sess.run(tf.global_variables_initializer())
-		
-		for epoch in range(num_epochs):
-			print('\nEPOCH {}/{}'.format(epoch, num_epochs))
+		iterator_train = train_dataset.make_one_shot_iterator()
+		next_element_train = iterator_train.get_next()
+		iterator_valid = valid_dataset.make_one_shot_iterator()
+		next_element_valid = iterator_valid.get_next()
 
-			timer('train, epoch {0}'.format(epoch))
-			train_loss_list, train_acc_list, train_top6_list = [], [], []
+		#iterator_train = train_dataset.make_initializable_iterator()
+		#x, y = next_element_train
 
-			for i in range(train_steps_per_epoch):
-				
-				try:
-					features, labels = sess.run(next_element_train)
-					#print(i, labels[0])
-					sess.run(train_op, feed_dict={x: features, y: labels})
-					
-					#train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-					train_loss, train_acc, train_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
+		x = tf.placeholder(tf.float32, [None, IMAGE_SIZE[0], IMAGE_SIZE[1], 3], name='input')
+		y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
-					train_loss_list.append(np.mean(train_loss))
-					train_acc_list.append(train_acc)
-					train_top6_list.append(np.mean(train_top6))
+		logits, end_points = net(x, num_classes=num_classes, is_training=True)
+		logits = tf.reshape(logits, [-1, num_classes])
+		output = tf.nn.softmax(logits, name=OUTPUT_NODE)
 
-					if i % 100 == 0:
-						print('epoch={} i={}: train loss={:.4f}, acc={:.4f}, top6={:.4f}'.\
-							format(epoch, i, np.mean(train_loss_list), 
-							np.mean(train_acc_list), np.mean(train_top6_list)))
-					
-				except tf.errors.OutOfRangeError:
-					print("End of training dataset.")
-					break	
-
-
-			# valid
-			timer('valid, epoch {0}'.format(epoch))
-			valid_loss_list = []
-			valid_acc_list = []
-			valid_top6_list = []			
-
-			for i in range(valid_steps_per_epoch):
-				
-				try:
-					features, labels = sess.run(next_element_valid)
-					valid_loss, valid_acc, valid_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
-
-					valid_loss_list.append(np.mean(valid_loss))
-					valid_acc_list.append(valid_acc)
-					valid_top6_list.append(np.mean(valid_top6))
-					if i % 10 == 0:
-						print('epoch={} i={}: valid acc={:.4f}, top6={:.4f}'.\
-							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_top6_list)))
-				except tf.errors.OutOfRangeError:
-					print("End of valid dataset.")
-					break			
-			timer()
-
-			# result for each epoch
-			mean_train_loss = np.mean(train_loss_list)
-			mean_valid_loss = np.mean(valid_loss_list)
-			mean_train_acc = np.mean(train_acc_list)
-			mean_valid_acc = np.mean(valid_acc_list)
-			mean_train_top6 = np.mean(train_top6_list)
-			mean_valid_top6 = np.mean(valid_top6_list)
-			res = '[{:02}]: TRAIN loss={:.4f} acc={:.4f} top6={:.4f}; VALID loss={:.4f} acc={:.4f} top6={:.4f}\n'.\
-				format(epoch, mean_train_loss, mean_train_acc, mean_train_top6,
-					mean_valid_loss, mean_valid_acc, mean_valid_top6)
-			print(res)
-			f_res.write(res)
-			f_res.flush()
-
-			results['epoch'].append(epoch)
-			results['train_loss'].append(mean_train_loss)
-			results['valid_loss'].append(mean_valid_loss)
-			results['train_acc'].append(mean_train_acc)
-			results['valid_acc'].append(mean_valid_acc)
-			results['train_top6'].append(mean_train_top6)
-			results['valid_top6'].append(mean_valid_top6)			
-			if SHOW_PLOT:
-				plot_figure(results, ax1, ax2)
-				#_thread.start_new_thread(plot_figure, ())
-
-			if epoch % epochs_checkpoint == 0 and epoch > 1:
-				# save_checkpoints	
-				saver = tf.train.Saver()		
-				saver.save(sess, './{}/{}'.\
-					format(dir_for_checkpoints, checkpoint_name))  
-
-				# SAVE GRAPH TO PB
-				graph = sess.graph			
-				tf.graph_util.remove_training_nodes(graph.as_graph_def())
-				# tf.contrib.quantize.create_eval_graph(graph)
-				# tf.contrib.quantize.create_training_graph()
-
-				output_node_names = [OUTPUT_NODE]
-				output_graph_def = tf.graph_util.convert_variables_to_constants(
-					sess, graph.as_graph_def(), output_node_names)
-				# save graph:		
-				pb_file_name = '{}_(ep={}_acc={:.4f}_top6={:.4f}).pb'.format(net_model_name, epoch, mean_valid_acc, mean_valid_top6)
-				tf.train.write_graph(output_graph_def, dir_for_pb, pb_file_name, as_text=False)	
+		loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
+		train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
+		correct_prediction = tf.equal(tf.argmax(logits,1), tf.argmax(y,1))
+		acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1 - mean value	
+		acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)  # list values for batch.
 			
-f_res.close()
+		
+		with tf.Session() as sess:
+			sess.run(tf.global_variables_initializer())
+
+			if arguments.restore_checkpoint:		
+				tf.train.Saver().restore(sess, './{}/{}'.\
+					format(dir_for_checkpoints, arguments.restore_checkpoint))			
+
+			for epoch in range(num_epochs):
+				print('\nEPOCH {}/{}'.format(epoch, num_epochs))
+
+				timer('train, epoch {0}'.format(epoch))
+				train_loss_list, train_acc_list, train_top6_list = [], [], []
+
+				for i in range(train_steps_per_epoch):
+					
+					try:
+						features, labels = sess.run(next_element_train)
+						#print(i, labels[0])
+						sess.run(train_op, feed_dict={x: features, y: labels})
+						
+						#train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
+						train_loss, train_acc, train_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
+
+						train_loss_list.append(np.mean(train_loss))
+						train_acc_list.append(train_acc)
+						train_top6_list.append(np.mean(train_top6))
+
+						if i % 100 == 0:
+							print('epoch={} i={}: train loss={:.4f}, acc={:.4f}, top6={:.4f}'.\
+								format(epoch, i, np.mean(train_loss_list), 
+								np.mean(train_acc_list), np.mean(train_top6_list)))
+						
+					except tf.errors.OutOfRangeError:
+						print("End of training dataset.")
+						break	
+
+
+				# valid
+				timer('valid, epoch {0}'.format(epoch))
+				valid_loss_list = []
+				valid_acc_list = []
+				valid_top6_list = []			
+
+				for i in range(valid_steps_per_epoch):
+					
+					try:
+						features, labels = sess.run(next_element_valid)
+						valid_loss, valid_acc, valid_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
+
+						valid_loss_list.append(np.mean(valid_loss))
+						valid_acc_list.append(valid_acc)
+						valid_top6_list.append(np.mean(valid_top6))
+						if i % 10 == 0:
+							print('epoch={} i={}: valid acc={:.4f}, top6={:.4f}'.\
+								format(epoch, i, np.mean(valid_acc_list), np.mean(valid_top6_list)))
+					except tf.errors.OutOfRangeError:
+						print("End of valid dataset.")
+						break			
+				timer()
+
+				# result for each epoch
+				mean_train_loss = np.mean(train_loss_list)
+				mean_valid_loss = np.mean(valid_loss_list)
+				mean_train_acc = np.mean(train_acc_list)
+				mean_valid_acc = np.mean(valid_acc_list)
+				mean_train_top6 = np.mean(train_top6_list)
+				mean_valid_top6 = np.mean(valid_top6_list)
+				res = '[{:02}]: TRAIN loss={:.4f} acc={:.4f} top6={:.4f}; VALID loss={:.4f} acc={:.4f} top6={:.4f}\n'.\
+					format(epoch, mean_train_loss, mean_train_acc, mean_train_top6,
+						mean_valid_loss, mean_valid_acc, mean_valid_top6)
+				print(res)
+				f_res.write(res)
+				f_res.flush()
+
+				results['epoch'].append(epoch)
+				results['train_loss'].append(mean_train_loss)
+				results['valid_loss'].append(mean_valid_loss)
+				results['train_acc'].append(mean_train_acc)
+				results['valid_acc'].append(mean_valid_acc)
+				results['train_top6'].append(mean_train_top6)
+				results['valid_top6'].append(mean_valid_top6)			
+				if SHOW_PLOT:
+					plot_figure(results, ax1, ax2)
+					#_thread.start_new_thread(plot_figure, ())
+
+				if epoch % epochs_checkpoint == 0 and epoch > 1:
+					# save_checkpoints	
+					saver = tf.train.Saver()		
+					saver.save(sess, './{}/{}'.\
+						format(dir_for_checkpoints, checkpoint_name))  
+
+					# SAVE GRAPH TO PB
+					graph = sess.graph			
+					tf.graph_util.remove_training_nodes(graph.as_graph_def())
+					# tf.contrib.quantize.create_eval_graph(graph)
+					# tf.contrib.quantize.create_training_graph()
+
+					output_node_names = [OUTPUT_NODE]
+					output_graph_def = tf.graph_util.convert_variables_to_constants(
+						sess, graph.as_graph_def(), output_node_names)
+					# save graph:		
+					pb_file_name = '{}_(ep={}_acc={:.4f}_top6={:.4f}).pb'.format(net_model_name, epoch, mean_valid_acc, mean_valid_top6)
+					tf.train.write_graph(output_graph_def, dir_for_pb, pb_file_name, as_text=False)	
+	# end of training
+	f_res.close()
 
 """
 With augmentation (rot+transform):
