@@ -113,7 +113,7 @@ train_dataset = goods_dataset.get_train_dataset()
 valid_dataset = goods_dataset.get_valid_dataset()
 
 num_epochs = 400
-epochs_checkpoint = 20 # saving checkpoints and pb-file 
+epochs_checkpoint = 2 # saving checkpoints and pb-file 
 #train_steps_per_epoch = 1157
 #valid_steps_per_epoch = 77
 train_steps_per_epoch = 115
