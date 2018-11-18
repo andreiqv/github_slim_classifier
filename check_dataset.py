@@ -40,11 +40,14 @@ with graph.as_default():
 	iterator_valid = valid_dataset.make_one_shot_iterator()
 	next_element_valid = iterator_valid.get_next()
 
-	count = 0
-	while True:				
-		try:
-			features, labels = sess.run(next_element_train)
-			count += 1					
-		except tf.errors.OutOfRangeError:
-			print("End of training dataset. Count={}".format(count))
-			break	
+	with tf.Session() as sess:
+		sess.run(tf.global_variables_initializer())
+
+		count = 0
+		while True:				
+			try:
+				features, labels = sess.run(next_element_train)
+				count += 1					
+			except tf.errors.OutOfRangeError:
+				print("End of training dataset. Count={}".format(count))
+				break	
