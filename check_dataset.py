@@ -43,11 +43,26 @@ with graph.as_default():
 	with tf.Session() as sess:
 		sess.run(tf.global_variables_initializer())
 
-		count = 0
+		train_count = 0
 		while True:				
 			try:
 				features, labels = sess.run(next_element_train)
-				count += 1					
+				train_count += 1
+				if train_count % 20 == 0:
+					print(count)				
 			except tf.errors.OutOfRangeError:
-				print("End of training dataset. Count={}".format(count))
+				print("End of training dataset. Count={} batches".format(train_count))
 				break	
+
+		valid_count = 0
+		while True:				
+			try:
+				features, labels = sess.run(next_element_valid)
+				valid_count += 1	
+				if valid_count % 20 == 0:
+					print(valid_count)								
+			except tf.errors.OutOfRangeError:
+				print("End of validation dataset. Count={} batches".format(valid_count))
+				break	
+
+		print('\nTrain={}, valid={}'.format(train_count, valid_count))
