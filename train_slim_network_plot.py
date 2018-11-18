@@ -206,8 +206,7 @@ with graph.as_default():
 							format(epoch, i, np.mean(valid_acc_list), np.mean(valid_top6_list)))
 				except tf.errors.OutOfRangeError:
 					print("End of valid dataset.")
-					break
-			
+					break			
 			timer()
 
 			# result for each epoch
@@ -217,7 +216,7 @@ with graph.as_default():
 			mean_valid_acc = np.mean(valid_acc_list)
 			mean_train_top6 = np.mean(train_top6_list)
 			mean_valid_top6 = np.mean(valid_top6_list)
-			res = '{}: TRAIN loss={:.4f} acc={:.4f} top6={:.4f}; VALID loss={:.4f} acc={:.4f} top6={:.4f}\n'.\
+			res = '[{:02}]: TRAIN loss={:.4f} acc={:.4f} top6={:.4f}; VALID loss={:.4f} acc={:.4f} top6={:.4f}\n'.\
 				format(epoch, mean_train_loss, mean_train_acc, mean_train_top6,
 					mean_valid_loss, mean_valid_acc, mean_valid_top6)
 			print(res)
@@ -299,9 +298,10 @@ resnet_v2_152:
 ------
 influence of augmentation:
 resnet_v2_50
-1) no augment.:   EPOCH 20: TRAIN loss=0.0586 acc=0.9971 top6=1.0000; VALID loss=1.0276 acc=0.7062 top6=0.9551
-2) no transform: 
-3) with augment.:
+1) no augment.:   
+2) no transform:  [20]: TRAIN loss=0.0586 acc=0.9971 top6=1.0000; VALID loss=1.0276 acc=0.7062 top6=0.9551
+3) only rotation: 
+4) full augment.: [20]: TRAIN loss=0.2077 acc=0.9704 top6=0.9989; VALID loss=0.9470 acc=0.6974 top6=0.9615
 
 
 ------

@@ -246,10 +246,11 @@ class GoodsDataset:
                 #images = tf.image.resize_image_with_crop_or_pad(images, w+d, h+d)
                 print('images.shape:', images.shape)
                 angle = tf.random_uniform(shape=(1,), minval=0, maxval=settings.rotation_max_angle)
-                images = tf.contrib.image.rotate(images, angle * math.pi / 180, interpolation='BILINEAR')
-                #images = tf.image.crop_to_bounding_box(images, d, d, s+d, s+d)
                 
-                """
+                #images = tf.contrib.image.rotate(images, angle * math.pi / 180, interpolation='BILINEAR')
+                
+                #images = tf.image.crop_to_bounding_box(images, d, d, s+d, s+d)
+                                
                 # Transformation
                 #transform1 = tf.constant([1.0, 0.2, -30.0, 0.2, 1.0, 0.0, 0.0, 0.0], dtype=tf.float32)            
                 # transform is  vector of length 8 or tensor of size N x 8
@@ -275,7 +276,7 @@ class GoodsDataset:
                 #print(images.shape)
                 batch_size = tf.size(images) / (3*h*w)
                 images = tf.random_crop(images, [batch_size, h_crop, w_crop, 3])
-                """
+                
 
                 images = tf.image.resize_images(images, [h, w])            
                 # ---
