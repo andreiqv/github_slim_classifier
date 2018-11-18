@@ -49,7 +49,7 @@ with graph.as_default():
 				features, labels = sess.run(next_element_train)
 				train_count += 1
 				if train_count % 20 == 0:
-					print(count)				
+					print(train_count)				
 			except tf.errors.OutOfRangeError:
 				print("End of training dataset. Count={} batches".format(train_count))
 				break	
