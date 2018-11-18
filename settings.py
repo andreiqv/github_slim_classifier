@@ -15,6 +15,7 @@ dataset_order = 'shuffle'
 do_transformations = True # rotation and affine transformation
 transform_maxval = 0.2 
 rotation_max_angle = 90
+crop_zoom = 1.1 # for crop
 
 
 # num_classes = 148
