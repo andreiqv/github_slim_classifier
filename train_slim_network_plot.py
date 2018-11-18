@@ -130,12 +130,11 @@ def model_function(next_element):
 
 
 def createParser ():
-	"""	ArgumentParser
-	"""
+	"""	ArgumentParser """
 	parser = argparse.ArgumentParser()
 	#parser.add_argument('-r', '--restore', dest='restore', action='store_true')
 	parser.add_argument('-rc', '--restore_checkpoint', default=None, type=str, help='Restore from checkpoints')
-
+	return parser
 
 if __name__ == '__main__':
 
