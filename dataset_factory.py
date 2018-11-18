@@ -247,7 +247,7 @@ class GoodsDataset:
                 print('images.shape:', images.shape)
                 angle = tf.random_uniform(shape=(1,), minval=0, maxval=settings.rotation_max_angle)
                 
-                #images = tf.contrib.image.rotate(images, angle * math.pi / 180, interpolation='BILINEAR')
+                images = tf.contrib.image.rotate(images, angle * math.pi / 180, interpolation='BILINEAR')
                 
                 #images = tf.image.crop_to_bounding_box(images, d, d, s+d, s+d)
                                 

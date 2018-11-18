@@ -12,6 +12,7 @@ import tensorflow as tf
 import numpy as np
 import math
 import sys, os
+import argparse
 
 from dataset_factory import GoodsDataset
 #from goods_tf_records import GoodsTfrecordsDataset
@@ -38,7 +39,7 @@ slim = tf.contrib.slim
 from nets import simple_fc
 #net, net_model_name = simple_fc.fc, 'simple_fc'
 #net, net_model_name = alexnet.alexnet_v2, 'alexnet_v2'
-net, net_model_name = resnet_v2.resnet_v2_50, 'resnet_v2_50_(transform_no_rotation)'
+net, net_model_name = resnet_v2.resnet_v2_50, 'resnet_v2_50_[normal]'
 
 
 #net = inception.inception_v3
