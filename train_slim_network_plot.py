@@ -51,8 +51,8 @@ net = simple_fc.fc
 #net_model_name = 'alexnet_v2'
 #net = alexnet.alexnet_v2
 
-net_model_name = 'resnet_v2_152'
-net = resnet_v2.resnet_v2_152
+#net_model_name = 'resnet_v2_152'
+#net = resnet_v2.resnet_v2_152
 
 #--------------
 
