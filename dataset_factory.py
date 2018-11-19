@@ -296,7 +296,7 @@ class GoodsDataset:
             """
 
             # add noise:
-            noise = tf.random_normal(shape=tf.shape(images), mean=0.0, stddev=0.1, dtype=tf.float32)
+            noise = tf.random_normal(shape=tf.shape(images), mean=0.0, stddev=0.2, dtype=tf.float32)
             images = tf.add(images, noise)
 
             #images = tf.image.per_image_standardization(images)
