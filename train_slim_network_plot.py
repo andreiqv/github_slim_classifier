@@ -76,7 +76,6 @@ os.system('mkdir -p {}'.format(dir_for_checkpoints))
 #--
 # plotting
 SHOW_PLOT = True
-import _thread
 import matplotlib.pyplot as plt
 fig = plt.figure(figsize=(10, 5))
 ax1 = fig.add_subplot(121)
@@ -89,7 +88,7 @@ def plot_figure(results, ax1, ax2):
 	ax1.plot(results['epoch'], results['valid_loss'])
 	ax1.legend(['train_loss', 'valid_loss'], loc='upper right')
 	ax1.grid(color='g', linestyle='-', linewidth=0.2)
-	ax1.set_ylim(0, 3.0)
+	ax1.set_ylim(0, 2.0)
 	ax2.cla()
 	ax2.plot(results['epoch'], results['train_top6'])
 	ax2.plot(results['epoch'], results['valid_top6'])
