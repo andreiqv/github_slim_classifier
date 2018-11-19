@@ -316,9 +316,10 @@ resnet_v2_152:
 ------
 influence of augmentation:
 resnet_v2_50
-1) no augment.:   
-2) no transform:  [20]: TRAIN loss=0.0586 acc=0.9971 top6=1.0000; VALID loss=1.0276 acc=0.7062 top6=0.9551
-3) only rotation: 
+1) no transform:  [20]: TRAIN loss=0.0586 acc=0.9971 top6=1.0000; VALID loss=1.0276 acc=0.7062 top6=0.9551
+2) only rotation: [20]: TRAIN loss=0.1296 acc=0.9858 top6=0.9997; VALID loss=1.5145 acc=0.5818 top6=0.9170
+3) trans. no rot. [20]: TRAIN loss=0.1367 acc=0.9831 top6=0.9996; VALID loss=0.9056 acc=0.7097 top6=0.9671
+				  [60]: TRAIN loss=0.0071 acc=0.9999 top6=1.0000; VALID loss=1.1407 acc=0.7358 top6=0.9619	
 4) full augment.: [20]: TRAIN loss=0.2077 acc=0.9704 top6=0.9989; VALID loss=0.9470 acc=0.6974 top6=0.9615
 
 
