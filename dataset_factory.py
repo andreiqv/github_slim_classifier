@@ -289,7 +289,7 @@ class GoodsDataset:
             images = tf.image.random_saturation(images, lower=1.0, upper=1.5)
 
             # add noise:
-            noise = tf.random_normal(shape=tf.shape(x), mean=0.0, stddev=1.0, dtype=tf.float32)
+            noise = tf.random_normal(shape=tf.shape(images), mean=0.0, stddev=1.0, dtype=tf.float32)
             images = tf.add(images, noise)
 
             #images = tf.image.per_image_standardization(images)
