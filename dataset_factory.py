@@ -283,10 +283,10 @@ class GoodsDataset:
                 # end of Rotation and Transformation block   
 
 
-            images = tf.image.random_hue(images, max_delta=0.1)
-            images = tf.image.random_contrast(images, lower=0.6, upper=1.7)
-            images = tf.image.random_brightness(images, max_delta=0.12)
-            images = tf.image.random_saturation(images, lower=0.7, upper=1.7)
+            images = tf.image.random_hue(images, max_delta=0.02)
+            images = tf.image.random_contrast(images, lower=0.9, upper=1.2)
+            images = tf.image.random_brightness(images, max_delta=0.05)
+            images = tf.image.random_saturation(images, lower=1.0, upper=1.2)
             """
             images = tf.image.random_hue(images, max_delta=0.05)
             images = tf.image.random_contrast(images, lower=0.9, upper=1.5)
