@@ -300,11 +300,11 @@ class GoodsDataset:
             noise = tf.random_normal(shape=tf.shape(images), mean=0.0, stddev=0.1, dtype=tf.float32)
             images = tf.add(images, noise)
 
-            #images = tf.image.per_image_standardization(images)
-            #images = tf.map_fn(lambda frame: tf.image.per_image_standardization(frame), images)                    
+            images = tf.image.per_image_standardization(images)
+            images = tf.map_fn(lambda frame: tf.image.per_image_standardization(frame), images) 
             
-            #images = tf.minimum(images, 1.0)
-            #images = tf.maximum(images, 0.0)
+            images = tf.minimum(images, 1.0)
+            images = tf.maximum(images, 0.0)
 
             images.set_shape([None, None, None, 3])
             return images, labels
