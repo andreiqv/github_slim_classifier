@@ -203,7 +203,7 @@ class GoodsDataset:
     def get_valid_dataset(self):
         dataset = tf.data.Dataset.from_tensor_slices((self.valid_image_paths, self.valid_image_labels))
         dataset = dataset.map(self._parse_function, num_parallel_calls=8)
-
+        dataset = dataset.batch(self.valid_batch)
         return dataset
 
     def get_images_for_label(self, label):
