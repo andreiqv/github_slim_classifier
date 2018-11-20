@@ -14,9 +14,6 @@ import math
 import sys, os
 import argparse
 
-from dataset_factory import GoodsDataset
-#from goods_tf_records import GoodsTfrecordsDataset
-
 # tf.enable_eager_execution()
 import settings
 from settings import IMAGE_SIZE
@@ -39,7 +36,7 @@ slim = tf.contrib.slim
 from nets import simple_fc
 #net, net_model_name = simple_fc.fc, 'simple_fc'
 #net, net_model_name = alexnet.alexnet_v2, 'alexnet_v2'
-net, net_model_name = resnet_v2.resnet_v2_50, 'resnet_v2_50__cont_add_noise'
+net, net_model_name = resnet_v2.resnet_v2_50, 'resnet_v2_50_imgaug'
 
 
 #net = inception.inception_v3
@@ -104,6 +101,9 @@ def plot_figure(results, ax1, ax2):
 
 #------------
 # dataset
+#from dataset_factory import GoodsDataset
+from dataset_factory_imgaug import GoodsDatasetImgaug as GoodsDataset
+
 goods_dataset = GoodsDataset(settings.dataset_list, settings.labels_list, 
 settings.IMAGE_SIZE, settings.train_batch, settings.valid_batch, settings.multiply, 
 settings.valid_percentage)
