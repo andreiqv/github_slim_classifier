@@ -244,12 +244,8 @@ class GoodsDataset:
             images = tf.pad(images, paddings, "SYMMETRIC")
             #images = tf.image.resize_image_with_crop_or_pad(images, w+d, h+d)
             print('images.shape:', images.shape)
-            angle = tf.random_uniform(shape=(1,), minval=0, maxval=settings.rotation_max_angle)
-                
-
-            #    
-            images = tf.contrib.image.rotate(images, angle * math.pi / 180, interpolation='NEAREST')
-            #images = tf.contrib.image.rotate(images, angle * math.pi / 180, interpolation='BILINEAR')
+            angle = tf.random_uniform(shape=(1,), minval=0, maxval=settings.rotation_max_angle)                
+            images = tf.contrib.image.rotate(images, angle * math.pi / 180, interpolation='BILINEAR')
             
             #images = tf.image.crop_to_bounding_box(images, d, d, s+d, s+d)
                                 
