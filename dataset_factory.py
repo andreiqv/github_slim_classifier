@@ -269,7 +269,7 @@ class GoodsDataset:
                 images = tf.contrib.image.transform(images, transform1)            
                 images = tf.image.resize_image_with_crop_or_pad(images, h, w)
                 # ---            
-                zoom = 1.05
+                zoom = 1.1
                 w_crop = math.ceil(w / zoom)
                 h_crop = math.ceil(h / zoom)
                 #batch_size = int(images.shape[0])
@@ -302,8 +302,9 @@ class GoodsDataset:
 
             #images = tf.image.per_image_standardization(images)
             #images = tf.map_fn(lambda frame: tf.image.per_image_standardization(frame), images)                    
-            images = tf.minimum(images, 1.0)
-            images = tf.maximum(images, 0.0)
+            
+            #images = tf.minimum(images, 1.0)
+            #images = tf.maximum(images, 0.0)
 
             images.set_shape([None, None, None, 3])
             return images, labels
