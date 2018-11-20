@@ -269,7 +269,7 @@ class GoodsDataset:
                 images = tf.contrib.image.transform(images, transform1)            
                 images = tf.image.resize_image_with_crop_or_pad(images, h, w)
                 # ---            
-                zoom = 1.2
+                zoom = 1.05
                 w_crop = math.ceil(w / zoom)
                 h_crop = math.ceil(h / zoom)
                 #batch_size = int(images.shape[0])
