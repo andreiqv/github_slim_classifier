@@ -240,6 +240,14 @@ class GoodsDatasetImgaug(GoodsDataset):
         img_size = self.image_size
 
         def _random_distord(images, labels):
+
+            #--------
+            # color 
+            images = tf.image.random_hue(images, max_delta=0.05)
+            images = tf.image.random_contrast(images, lower=0.9, upper=1.5)
+            images = tf.image.random_brightness(images, max_delta=0.1)
+            images = tf.image.random_saturation(images, lower=1.0, upper=1.5)    
+            #--------            
             images = np.array(images)
             labels = np.array(labels)
             sometimes = lambda aug: iaa.Sometimes(0.5, aug)
