@@ -1,11 +1,10 @@
-DEBUG = False
 # dataset parameters
 #IMAGE_SIZE = (299, 299)
 IMAGE_SIZE = (224, 224)
 multiply = 1
 valid_percentage = 0.1
-train_batch = 8  # 32
-valid_batch = 8  # 32
+train_batch = 32  # 32
+valid_batch = 32  # 32
 
 dataset_list = 'dataset-181018.list'
 labels_list = 'dataset-181018.labels'

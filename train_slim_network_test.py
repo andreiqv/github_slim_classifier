@@ -201,7 +201,7 @@ if __name__ == '__main__':
 						train_top6_list.append(np.mean(train_top6))
 
 						acc1 = accuracy_top1(train_outputs, labels)
-						acc6 = accuracy_topk(train_outputs, labels, k=6)
+						acc6 = accuracy_topk(train_outputs, labels, k=6, debug=False)
 						#print('top1={:.4f}, top6={:.4f}'.format(acc1, acc6))
 
 						if i % 100 == 0:

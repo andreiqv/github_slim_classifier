@@ -1,7 +1,6 @@
 import numpy as np
-from settings import DEBUG
 
-def accuracy(output, target, topk=(1,)):
+def accuracy(output, target, topk=(1,), debug=False):
     """Computes the precision@k for the specified values of k"""
     maxk = max(topk)
     batch_size = target.size(0)
@@ -19,7 +18,7 @@ def accuracy(output, target, topk=(1,)):
     return res
 
 
-def accuracy_top1(outputs, labels):
+def accuracy_top1(outputs, labels, debug=False):
 
 	batch_size = len(outputs)
 	res = np.zeros(batch_size, dtype=int)
@@ -29,11 +28,11 @@ def accuracy_top1(outputs, labels):
 		label = np.argmax(labels[i])
 		predict = np.argmax(output)
 		res[i] = 1 if label==predict else 0
-		if DEBUG: print('i={}: res={} (label={}, predict={})'.format(i, res[i], label, predict))
+		if debug: print('i={}: res={} (label={}, predict={})'.format(i, res[i], label, predict))
 	return np.mean(res)
 
 
-def accuracy_topk(outputs, labels, k=1):
+def accuracy_topk(outputs, labels, k=1, debug=False):
 
 	batch_size = len(outputs)
 	res = np.zeros(batch_size, dtype=int)
@@ -44,6 +43,6 @@ def accuracy_topk(outputs, labels, k=1):
 		#predict = np.argmax(output)
 		topk_predicts = output.argsort()[::-1][:k]
 		res[i] = 1 if label in set(topk_predicts) else 0
-		if DEBUG: print('i={}: res={} (label={}, predicts={})'.format(i, res[i], label, list(topk_predicts)))
+		if debug: print('i={}: res={} (label={}, predicts={})'.format(i, res[i], label, list(topk_predicts)))
 
 	return np.mean(res)
