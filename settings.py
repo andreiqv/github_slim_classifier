@@ -1,3 +1,4 @@
+DEBUG = True
 # dataset parameters
 #IMAGE_SIZE = (299, 299)
 IMAGE_SIZE = (224, 224)

@@ -19,6 +19,8 @@ import settings
 from settings import IMAGE_SIZE
 from utils.timer import timer
 
+from accuracy import *
+
 #--
 #import models.inception_v3 as inception
 from tensorflow.contrib.slim.nets import inception
@@ -191,7 +193,7 @@ if __name__ == '__main__':
 						sess.run(train_op, feed_dict={x: features, y: labels})
 						
 						#train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-						train_loss, train_acc, train_top6, train_output \
+						train_loss, train_acc, train_top6, train_outputs \
 							= sess.run([loss, acc, acc_top6, output], feed_dict={x: features, y: labels})
 
 						train_loss_list.append(np.mean(train_loss))
@@ -203,9 +205,13 @@ if __name__ == '__main__':
 								format(epoch, i, np.mean(train_loss_list), 
 								np.mean(train_acc_list), np.mean(train_top6_list)))
 
-						for j in range(len(train_output)):
-							print('j={}: {}'.format(j, train_output[j][0:5]))
+						#for j in range(len(train_outputs)):
+						#	print('j={}: {}'.format(j, train_outputs[j][0:5]))
 						
+						acc1 = accuracy_top1(outputs, labels)
+						acc6 = accuracy_topk(train_output, labels, k=TOPk)
+						print('top1={:.4f}, top6={:.4f}'.format(acc1, acc6))
+
 					except tf.errors.OutOfRangeError:
 						print("End of training dataset.")
 						break	
