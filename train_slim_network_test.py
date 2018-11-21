@@ -204,7 +204,7 @@ if __name__ == '__main__':
 								np.mean(train_acc_list), np.mean(train_top6_list)))
 
 						for j in range(len(train_output)):
-							print('j={}: {}'.format(j, train_output[j]))
+							print('j={}: {}'.format(j, train_output[j][0:5]))
 						
 					except tf.errors.OutOfRangeError:
 						print("End of training dataset.")
