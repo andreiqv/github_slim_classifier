@@ -41,8 +41,8 @@ from nets import simple_fc
 
 #net, net_model_name = alexnet.alexnet_v2, 'alexnet_v2'
 #net, net_model_name = inception_v4.inception_v4, 'inception_v4'
-#net, net_model_name = resnet_v2.resnet_v2_50, 'resnet_v2_50_test'
-net, net_model_name = resnet_v2.resnet_v2_152, 'resnet_v2_152'
+net, net_model_name = resnet_v2.resnet_v2_50, 'resnet_v2_50_test'
+#net, net_model_name = resnet_v2.resnet_v2_152, 'resnet_v2_152'
 
 
 #net = inception.inception_v3
