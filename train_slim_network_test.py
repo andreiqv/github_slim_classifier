@@ -209,7 +209,7 @@ if __name__ == '__main__':
 						#	print('j={}: {}'.format(j, train_outputs[j][0:5]))
 						
 						acc1 = accuracy_top1(train_outputs, labels)
-						acc6 = accuracy_topk(train_outputs, labels, k=TOPk)
+						acc6 = accuracy_topk(train_outputs, labels, k=6)
 						print('top1={:.4f}, top6={:.4f}'.format(acc1, acc6))
 
 					except tf.errors.OutOfRangeError:
