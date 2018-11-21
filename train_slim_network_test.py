@@ -66,7 +66,8 @@ print('Network name:', net_model_name)
 #--
 # for saving results
 results = {'epoch':[], 'train_loss':[], 'valid_loss':[], 'train_acc':[],\
-	'valid_acc':[], 'train_top6':[], 'valid_top6':[]}
+	'valid_acc':[], 'train_top6':[], 'valid_top6':[], 
+	'train_top6_2':[], 'valid_top6_2':[]}
 results_filename = '_results_{}.txt'.format(net_model_name)
 f_res = open(results_filename, 'wt')
 dir_for_pb = 'pb'
@@ -95,7 +96,9 @@ def plot_figure(results, ax1, ax2):
 	ax2.cla()
 	ax2.plot(results['epoch'], results['train_top6'])
 	ax2.plot(results['epoch'], results['valid_top6'])
-	ax2.legend(['train_top6', 'valid_top6'], loc='upper left')
+	ax2.plot(results['epoch'], results['train_top6_2'])
+	ax2.plot(results['epoch'], results['valid_top6_2'])
+	ax2.legend(['train_top6', 'valid_top6','train_top6_2', 'valid_top6_2'], loc='upper left')
 	ax2.grid(color='g', linestyle='-', linewidth=0.2)
 	ymaxval = max(results['valid_top6'])
 	ymin = 0.9 if ymaxval > 0.95 else (0.8 if ymaxval > 0.85 else 0.6)
@@ -184,6 +187,7 @@ if __name__ == '__main__':
 
 				timer('train, epoch {0}'.format(epoch))
 				train_loss_list, train_acc_list, train_top6_list = [], [], []
+				train_top6_list2 = []
 
 				for i in range(train_steps_per_epoch):
 					
@@ -196,18 +200,19 @@ if __name__ == '__main__':
 						train_outputs, train_loss, train_acc, train_top6 \
 							= sess.run([output, loss, acc, acc_top6], feed_dict={x: features, y: labels})
 
-						train_loss_list.append(np.mean(train_loss))
-						train_acc_list.append(train_acc)
-						train_top6_list.append(np.mean(train_top6))
-
 						acc1 = accuracy_top1(train_outputs, labels)
 						acc6 = accuracy_topk(train_outputs, labels, k=6, debug=False)
 						#print('top1={:.4f}, top6={:.4f}'.format(acc1, acc6))
 
+						train_loss_list.append(np.mean(train_loss))
+						train_acc_list.append(train_acc)
+						train_top6_list.append(np.mean(train_top6))
+						train_top6_list2.append(acc6)
+
 						if i % 100 == 0:
-							print('epoch={} i={}: train loss={:.4f}, acc={:.4f}, top6={:.4f}'.\
+							print('epoch={} i={}: train loss={:.4f}, acc={:.4f}, top6={:.4f} ({:.4f})'.\
 								format(epoch, i, np.mean(train_loss_list), 
-								np.mean(train_acc_list), np.mean(train_top6_list)))
+								np.mean(train_acc_list), np.mean(train_top6_list), np.mean(train_top6_list2)))
 
 						#for j in range(len(train_outputs)):
 						#	print('j={}: {}'.format(j, train_outputs[j][0:5]))
@@ -220,9 +225,8 @@ if __name__ == '__main__':
 
 				# valid
 				timer('valid, epoch {0}'.format(epoch))
-				valid_loss_list = []
-				valid_acc_list = []
-				valid_top6_list = []			
+				valid_loss_list, valid_acc_list, valid_top6_list = [], [], []
+				valid_top6_list2 = []
 
 				for i in range(valid_steps_per_epoch):
 					
@@ -238,10 +242,12 @@ if __name__ == '__main__':
 						valid_loss_list.append(np.mean(valid_loss))
 						valid_acc_list.append(valid_acc)
 						valid_top6_list.append(np.mean(valid_top6))
+						valid_top6_list2.append(acc6)
 
 						if i % 10 == 0:
-							print('epoch={} i={}: valid acc={:.4f}, top6={:.4f}'.\
-								format(epoch, i, np.mean(valid_acc_list), np.mean(valid_top6_list)))
+							print('epoch={} i={}: valid acc={:.4f}, top6={:.4f} ({:.4f})'.\
+								format(epoch, i, np.mean(valid_acc_list), 
+									np.mean(valid_top6_list), np.mean(valid_top6_list2)))
 					except tf.errors.OutOfRangeError:
 						print("End of valid dataset.")
 						break			
@@ -254,9 +260,11 @@ if __name__ == '__main__':
 				mean_valid_acc = np.mean(valid_acc_list)
 				mean_train_top6 = np.mean(train_top6_list)
 				mean_valid_top6 = np.mean(valid_top6_list)
+				mean_train_top6_2 = np.mean(train_top6_list2)
+				mean_valid_top6_2 = np.mean(valid_top6_list2)
 				res = '[{:02}]: TRAIN loss={:.4f} acc={:.4f} top6={:.4f}; VALID loss={:.4f} acc={:.4f} top6={:.4f}\n'.\
-					format(epoch, mean_train_loss, mean_train_acc, mean_train_top6,
-						mean_valid_loss, mean_valid_acc, mean_valid_top6)
+					format(epoch, mean_train_loss, mean_train_acc, mean_train_top6_2,
+						mean_valid_loss, mean_valid_acc, mean_valid_top6_2)
 				print(res)
 				f_res.write(res)
 				f_res.flush()
@@ -267,7 +275,10 @@ if __name__ == '__main__':
 				results['train_acc'].append(mean_train_acc)
 				results['valid_acc'].append(mean_valid_acc)
 				results['train_top6'].append(mean_train_top6)
-				results['valid_top6'].append(mean_valid_top6)			
+				results['valid_top6'].append(mean_valid_top6)
+				results['train_top6_2'].append(mean_train_top6_2)
+				results['valid_top6_2'].append(mean_valid_top6_2)
+
 				if SHOW_PLOT:
 					plot_figure(results, ax1, ax2)
 					#_thread.start_new_thread(plot_figure, ())
