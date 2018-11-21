@@ -19,7 +19,7 @@ import settings
 from settings import IMAGE_SIZE
 from utils.timer import timer
 
-from accuracy import *
+from accuracy_np import *
 
 #--
 #import models.inception_v3 as inception
