@@ -194,7 +194,7 @@ if __name__ == '__main__':
 						
 						#train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
 						train_loss, train_acc, train_top6, train_outputs \
-							= sess.run([loss, acc, acc_top6, output], feed_dict={x: features, y: labels})
+							= sess.run([loss, acc, acc_top6, logits], feed_dict={x: features, y: labels})
 
 						train_loss_list.append(np.mean(train_loss))
 						train_acc_list.append(train_acc)
