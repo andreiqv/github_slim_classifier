@@ -193,14 +193,18 @@ if __name__ == '__main__':
 						sess.run(train_op, feed_dict={x: features, y: labels})
 						
 						#train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
-						train_loss, train_acc, train_top6, train_outputs \
-							= sess.run([loss, acc, acc_top6, logits], feed_dict={x: features, y: labels})
+						train_outputs, train_loss, train_acc, train_top6 \
+							= sess.run([output, loss, acc, acc_top6], feed_dict={x: features, y: labels})
 
 						train_loss_list.append(np.mean(train_loss))
 						train_acc_list.append(train_acc)
 						train_top6_list.append(np.mean(train_top6))
 
-						if i % 1 == 0:
+						acc1 = accuracy_top1(train_outputs, labels)
+						acc6 = accuracy_topk(train_outputs, labels, k=6)
+						#print('top1={:.4f}, top6={:.4f}'.format(acc1, acc6))
+
+						if i % 100 == 0:
 							print('epoch={} i={}: train loss={:.4f}, acc={:.4f}, top6={:.4f}'.\
 								format(epoch, i, np.mean(train_loss_list), 
 								np.mean(train_acc_list), np.mean(train_top6_list)))
@@ -208,9 +212,6 @@ if __name__ == '__main__':
 						#for j in range(len(train_outputs)):
 						#	print('j={}: {}'.format(j, train_outputs[j][0:5]))
 						
-						acc1 = accuracy_top1(train_outputs, labels)
-						acc6 = accuracy_topk(train_outputs, labels, k=6)
-						print('top1={:.4f}, top6={:.4f}'.format(acc1, acc6))
 
 					except tf.errors.OutOfRangeError:
 						print("End of training dataset.")
@@ -227,12 +228,18 @@ if __name__ == '__main__':
 					
 					try:
 						features, labels = sess.run(next_element_valid)
-						valid_loss, valid_acc, valid_top6 = sess.run([loss, acc, acc_top6], feed_dict={x: features, y: labels})
+						valid_outputs, valid_loss, valid_acc, valid_top6 \
+							= sess.run([output, loss, acc, acc_top6], feed_dict={x: features, y: labels})
+
+						acc1 = accuracy_top1(valid_outputs, labels)
+						acc6 = accuracy_topk(valid_outputs, labels, k=6)
+						#print('top1={:.4f}, top6={:.4f}'.format(acc1, acc6))						
 
 						valid_loss_list.append(np.mean(valid_loss))
 						valid_acc_list.append(valid_acc)
 						valid_top6_list.append(np.mean(valid_top6))
-						if i % 1 == 0:
+
+						if i % 10 == 0:
 							print('epoch={} i={}: valid acc={:.4f}, top6={:.4f}'.\
 								format(epoch, i, np.mean(valid_acc_list), np.mean(valid_top6_list)))
 					except tf.errors.OutOfRangeError:
