@@ -25,7 +25,8 @@ def accuracy_top1(outputs, labels):
 	res = np.zeros(batch_size, dtype=int)
 	for i in range(batch_size):
 		output = outputs[i] #.detach().cpu().numpy()
-		label = int(labels[i])
+		#label = int(labels[i])
+		label = np.argmax(labels[i])
 		predict = np.argmax(output)
 		res[i] = 1 if label==predict else 0
 		if DEBUG: print('i={}: res={} (label={}, predict={})'.format(i, res[i], label, predict))
@@ -38,7 +39,8 @@ def accuracy_topk(outputs, labels, k=1):
 	res = np.zeros(batch_size, dtype=int)
 	for i in range(batch_size):
 		output = outputs[i] #.detach().cpu().numpy()
-		label = int(labels[i])
+		#label = int(labels[i])
+		label = np.argmax(labels[i])
 		#predict = np.argmax(output)
 		topk_predicts = output.argsort()[::-1][:k]
 		res[i] = 1 if label in set(topk_predicts) else 0
