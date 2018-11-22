@@ -287,7 +287,7 @@ class GoodsDataset:
             images = tf.image.random_brightness(images, max_delta=0.05)
             images = tf.image.random_saturation(images, lower=1.0, upper=1.2)
             """
-            
+
             images = tf.image.random_hue(images, max_delta=0.05)
             images = tf.image.random_contrast(images, lower=0.9, upper=1.5)
             images = tf.image.random_brightness(images, max_delta=0.1)
@@ -307,9 +307,8 @@ class GoodsDataset:
             images.set_shape([None, None, None, 3])
             return images, labels
 
-        dataset = dataset.map(_random_distord, num_parallel_calls=8)
-        #dataset = dataset.batch(batch)
-
+        #dataset = dataset.map(_random_distord, num_parallel_calls=8)
+        
         return dataset
 
     def get_train_dataset(self):

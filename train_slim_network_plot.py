@@ -18,6 +18,7 @@ import argparse
 import settings
 from settings import IMAGE_SIZE
 from utils.timer import timer
+from augment import images_augment
 
 slim = tf.contrib.slim
 
@@ -160,7 +161,7 @@ if __name__ == '__main__':
 		x = tf.placeholder(tf.float32, [None, IMAGE_SIZE[0], IMAGE_SIZE[1], 3], name='input')
 		y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
-		x = tf.image.random_hue(x, max_delta=0.05)
+		x = images_augment(x)
 
 		logits, end_points = net(x, num_classes=num_classes, is_training=True)
 		logits = tf.reshape(logits, [-1, num_classes])
@@ -201,7 +202,7 @@ if __name__ == '__main__':
 						train_acc_list.append(train_acc)
 						train_top6_list.append(np.mean(train_top6))
 
-						if i % 10 == 0:
+						if i % 100 == 0:
 							print('epoch={} i={}: train loss={:.4f}, acc={:.4f}, top6={:.4f}'.\
 								format(epoch, i, np.mean(train_loss_list), 
 								np.mean(train_acc_list), np.mean(train_top6_list)))
