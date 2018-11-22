@@ -229,7 +229,7 @@ if __name__ == '__main__':
 						valid_acc_list.append(valid_acc)
 						valid_top6_list.append(np.mean(valid_top6))
 						if i % 10 == 0:
-							print('epoch={} i={}: valid acc={:.4f}, top6={:.4f}'.\
+							timer('epoch={} i={}: valid acc={:.4f}, top6={:.4f}'.\
 								format(epoch, i, np.mean(valid_acc_list), np.mean(valid_top6_list)))
 					except tf.errors.OutOfRangeError:
 						print("End of valid dataset.")
