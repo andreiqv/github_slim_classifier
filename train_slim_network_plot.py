@@ -161,8 +161,8 @@ if __name__ == '__main__':
 		x = tf.placeholder(tf.float32, [None, IMAGE_SIZE[0], IMAGE_SIZE[1], 3], name='input')
 		y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
-		with tf.device("/device:CPU:0"):
-			x = images_augment(x)
+		#with tf.device("/device:CPU:0"):
+		x = images_augment(x)
 
 		logits, end_points = net(x, num_classes=num_classes, is_training=True)
 		logits = tf.reshape(logits, [-1, num_classes])
@@ -229,7 +229,7 @@ if __name__ == '__main__':
 						valid_acc_list.append(valid_acc)
 						valid_top6_list.append(np.mean(valid_top6))
 						if i % 10 == 0:
-							timer('epoch={} i={}: valid acc={:.4f}, top6={:.4f}'.\
+							print('epoch={} i={}: valid acc={:.4f}, top6={:.4f}'.\
 								format(epoch, i, np.mean(valid_acc_list), np.mean(valid_top6_list)))
 					except tf.errors.OutOfRangeError:
 						print("End of valid dataset.")
