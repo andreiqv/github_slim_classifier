@@ -313,7 +313,7 @@ class GoodsDataset:
 
     def get_train_dataset(self):
         #with tf.device("/device:CPU:0"):
-        with tf.device("/device:GPU:0"):  
+        with tf.device("/device:GPU:3"): 
             dataset = tf.data.Dataset.from_tensor_slices((self.train_image_paths, self.train_image_labels))
             dataset = dataset.map(self._parse_function, num_parallel_calls=8)
             dataset = self._augment_dataset(dataset, self.multiply, self.train_batch)
