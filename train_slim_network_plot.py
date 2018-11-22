@@ -204,7 +204,7 @@ if __name__ == '__main__':
 						train_top6_list.append(np.mean(train_top6))
 
 						if i % 100 == 0:
-							print('epoch={} i={}: train loss={:.4f}, acc={:.4f}, top6={:.4f}'.\
+							timer('epoch={} i={}: train loss={:.4f}, acc={:.4f}, top6={:.4f}'.\
 								format(epoch, i, np.mean(train_loss_list), 
 								np.mean(train_acc_list), np.mean(train_top6_list)))
 						
