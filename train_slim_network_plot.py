@@ -19,6 +19,8 @@ import settings
 from settings import IMAGE_SIZE
 from utils.timer import timer
 
+slim = tf.contrib.slim
+
 #--
 #import models.inception_v3 as inception
 from tensorflow.contrib.slim.nets import inception
@@ -29,18 +31,20 @@ from nets import mobilenet_v1
 from nets import inception_v4
 from nets.mobilenet import mobilenet_v2
 from nets.nasnet import nasnet
-slim = tf.contrib.slim
+from nets.resnet18 import resnet
 
 #-----------------
 # Select network
 
 from nets import simple_fc
+from nets import resnet18
 #net, net_model_name = simple_fc.fc, 'simple_fc'
 #net, net_model_name = alexnet.alexnet_v2, 'alexnet_v2'
 #net, net_model_name = inception_v4.inception_v4, 'inception_v4'
 #net, net_model_name = resnet_v2.resnet_v2_50, 'resnet_v2_50'
 #net, net_model_name = resnet_v2.resnet_v2_152, 'resnet_v2_152'
-net, net_model_name = mobilenet_v2.mobilenet_v2_035, 'mobilenet_v2_035'
+net, net_model_name = mobilenet_v2.mobilenet_v2_035, 'mobilenet_v2_035_nonoise'
+#net, net_model_name = resnet18.resnet18, 'resnet18'
 
 
 #net = inception.inception_v3
