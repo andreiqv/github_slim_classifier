@@ -234,9 +234,6 @@ class GoodsDataset:
                 images = tf.image.random_flip_left_right(images)
                 images = tf.image.random_flip_up_down(images)
                 
-                # angle = tf.random_uniform(shape=(1,), minval=0, maxval=90)
-                # images = tf.contrib.image.rotate(images, angle * math.pi / 180, interpolation='BILINEAR')
-
                 # Rotation and transformation
                 # print(images.shape)  # = (?, 299, 299, ?)
                 print('images.shape:', images.shape)      
@@ -299,8 +296,8 @@ class GoodsDataset:
                 
                 
                 # add noise:
-                noise = tf.random_normal(shape=tf.shape(images), mean=0.0, stddev=0.1, dtype=tf.float32)
-                images = tf.add(images, noise)
+                #noise = tf.random_normal(shape=tf.shape(images), mean=0.0, stddev=0.1, dtype=tf.float32)
+                #images = tf.add(images, noise)
 
                 #images = tf.image.per_image_standardization(images)
                 #images = tf.map_fn(lambda frame: tf.image.per_image_standardization(frame), images) 
