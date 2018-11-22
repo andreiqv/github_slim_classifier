@@ -31,13 +31,11 @@ from nets import mobilenet_v1
 from nets import inception_v4
 from nets.mobilenet import mobilenet_v2
 from nets.nasnet import nasnet
-from nets.resnet18 import resnet
 
 #-----------------
 # Select network
 
 from nets import simple_fc
-from nets import resnet18
 #net, net_model_name = simple_fc.fc, 'simple_fc'
 #net, net_model_name = alexnet.alexnet_v2, 'alexnet_v2'
 #net, net_model_name = inception_v4.inception_v4, 'inception_v4'
