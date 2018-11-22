@@ -311,7 +311,7 @@ class GoodsDataset:
                 images.set_shape([None, None, None, 3])
                 return images, labels
 
-        #dataset = dataset.map(_random_distord, num_parallel_calls=8)
+        dataset = dataset.map(_random_distord, num_parallel_calls=8)
         
         return dataset
 
