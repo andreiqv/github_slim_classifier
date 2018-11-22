@@ -161,7 +161,7 @@ if __name__ == '__main__':
 		x = tf.placeholder(tf.float32, [None, IMAGE_SIZE[0], IMAGE_SIZE[1], 3], name='input')
 		y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
-		#x = images_augment(x)
+		x = images_augment(x)
 
 		with tf.device("/device:GPU:3"):	
 			logits, end_points = net(x, num_classes=num_classes, is_training=True)
