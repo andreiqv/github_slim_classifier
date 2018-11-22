@@ -229,12 +229,12 @@ class GoodsDataset:
 
         def _random_distord(images, labels):
 
-            with tf.device("/device:GPU:1"):
+            with tf.device("/device:CPU:0"):
 
-                """
+                
                 images = tf.image.random_flip_left_right(images)
                 images = tf.image.random_flip_up_down(images)
-                """
+                
                 # angle = tf.random_uniform(shape=(1,), minval=0, maxval=90)
                 # images = tf.contrib.image.rotate(images, angle * math.pi / 180, interpolation='BILINEAR')
 
@@ -270,7 +270,7 @@ class GoodsDataset:
                 #transform = tf.tile(tf.expand_dims(transform1, 0), [batch, 1])
                 #print('Added transformations:', transform)
                 images = tf.contrib.image.transform(images, transform1)            
-                #images = tf.image.resize_image_with_crop_or_pad(images, h, w)  # no GPU support
+                images = tf.image.resize_image_with_crop_or_pad(images, h, w)  # no GPU support
                 # ---            
                 zoom = 1.1
                 w_crop = math.ceil(w / zoom)
@@ -278,7 +278,7 @@ class GoodsDataset:
                 #batch_size = int(images.shape[0])
                 #print(images.shape)
                 batch_size = tf.size(images) / (3*h*w)
-                #images = tf.random_crop(images, [batch_size, h_crop, w_crop, 3])  # no GPU support
+                images = tf.random_crop(images, [batch_size, h_crop, w_crop, 3])  # no GPU support
 
                 images = tf.image.resize_images(images, [h, w])            
                 # ---
@@ -301,7 +301,7 @@ class GoodsDataset:
                 
                 # add noise:
                 noise = tf.random_normal(shape=tf.shape(images), mean=0.0, stddev=0.1, dtype=tf.float32)
-                #images = tf.add(images, noise)
+                images = tf.add(images, noise)
 
                 #images = tf.image.per_image_standardization(images)
                 #images = tf.map_fn(lambda frame: tf.image.per_image_standardization(frame), images) 
