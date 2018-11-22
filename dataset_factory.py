@@ -287,11 +287,11 @@ class GoodsDataset:
             images = tf.image.random_brightness(images, max_delta=0.05)
             images = tf.image.random_saturation(images, lower=1.0, upper=1.2)
             """
-            with tf.device("/device:GPU:3"): 
-                images = tf.image.random_hue(images, max_delta=0.05)
-                images = tf.image.random_contrast(images, lower=0.9, upper=1.5)
-                images = tf.image.random_brightness(images, max_delta=0.1)
-                images = tf.image.random_saturation(images, lower=1.0, upper=1.5)            
+            
+            images = tf.image.random_hue(images, max_delta=0.05)
+            images = tf.image.random_contrast(images, lower=0.9, upper=1.5)
+            images = tf.image.random_brightness(images, max_delta=0.1)
+            images = tf.image.random_saturation(images, lower=1.0, upper=1.5)            
             
             
             # add noise:

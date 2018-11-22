@@ -160,6 +160,8 @@ if __name__ == '__main__':
 		x = tf.placeholder(tf.float32, [None, IMAGE_SIZE[0], IMAGE_SIZE[1], 3], name='input')
 		y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
+		x = tf.image.random_hue(x, max_delta=0.05)
+
 		logits, end_points = net(x, num_classes=num_classes, is_training=True)
 		logits = tf.reshape(logits, [-1, num_classes])
 		output = tf.nn.softmax(logits, name=OUTPUT_NODE)
@@ -188,7 +190,8 @@ if __name__ == '__main__':
 					
 					try:
 						features, labels = sess.run(next_element_train)
-						#print(i, labels[0])
+						#print(i, labels[0])						
+
 						sess.run(train_op, feed_dict={x: features, y: labels})
 						
 						#train_acc, train_acc_top6 = sess.run([acc, acc_top6], feed_dict={x: features, y: labels})
