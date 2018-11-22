@@ -4,9 +4,11 @@ import settings
 from settings import IMAGE_SIZE
 
 def images_augment(images):
-
+            """
             images = tf.image.random_flip_left_right(images)
             images = tf.image.random_flip_up_down(images)
+            """
+            
             # angle = tf.random_uniform(shape=(1,), minval=0, maxval=90)
             # images = tf.contrib.image.rotate(images, angle * math.pi / 180, interpolation='BILINEAR')
 
