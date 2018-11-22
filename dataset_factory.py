@@ -229,8 +229,7 @@ class GoodsDataset:
 
         def _random_distord(images, labels):
 
-            with tf.device("/device:CPU:0"):
-
+            #with tf.device("/device:CPU:0"):
                 
                 images = tf.image.random_flip_left_right(images)
                 images = tf.image.random_flip_up_down(images)
