@@ -44,7 +44,7 @@ def images_augment(images):
 	#transform = tf.tile(tf.expand_dims(transform1, 0), [batch, 1])
 	#print('Added transformations:', transform)
 	images = tf.contrib.image.transform(images, transform1)	
-	#images = tf.image.resize_image_with_crop_or_pad(images, h, w)
+	#images = tf.image.resize_image_with_crop_or_pad(images, h, w) # no GPU support
 	# ---	
 	zoom = 1.1
 	w_crop = math.ceil(w / zoom)
@@ -52,7 +52,8 @@ def images_augment(images):
 	#batch_size = int(images.shape[0])
 	#print(images.shape)
 	batch_size = tf.size(images) / (3*h*w)
-	images = tf.random_crop(images, [batch_size, h_crop, w_crop, 3])
+	
+	#images = tf.random_crop(images, [batch_size, h_crop, w_crop, 3]) # no GPU support
 
 	images = tf.image.resize_images(images, [h, w])	
 	# ---
