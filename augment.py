@@ -44,7 +44,7 @@ def images_augment(images):
 	#transform = tf.tile(tf.expand_dims(transform1, 0), [batch, 1])
 	#print('Added transformations:', transform)
 	images = tf.contrib.image.transform(images, transform1)	
-	images = tf.image.resize_image_with_crop_or_pad(images, h, w)
+	#images = tf.image.resize_image_with_crop_or_pad(images, h, w)
 	# ---	
 	zoom = 1.1
 	w_crop = math.ceil(w / zoom)
