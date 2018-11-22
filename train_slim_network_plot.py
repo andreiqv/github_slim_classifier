@@ -164,7 +164,7 @@ if __name__ == '__main__':
 
 		#x = images_augment(x)
 
-		with tf.device("/device:GPU:3"):	
+		with tf.device("/device:GPU:1"):	
 			logits, end_points = net(x, num_classes=num_classes, is_training=True)
 			logits = tf.reshape(logits, [-1, num_classes])
 			output = tf.nn.softmax(logits, name=OUTPUT_NODE)
