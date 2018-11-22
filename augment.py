@@ -1,5 +1,7 @@
 import tensorflow as tf
 import math
+import settings
+from settings import IMAGE_SIZE
 
 def images_augment(images):
 
