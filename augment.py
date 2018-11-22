@@ -5,7 +5,7 @@ from settings import IMAGE_SIZE
       
 def images_augment(images):
 
-	with tf.device("/device:GPU:1"):
+	with tf.device("/device:СPU:0"):
 		"""
 		images = tf.image.random_flip_left_right(images)
 		images = tf.image.random_flip_up_down(images)
