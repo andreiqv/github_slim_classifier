@@ -1,4 +1,8 @@
+import tensorflow as tf
+import math
+
 def images_augment(images):
+
             images = tf.image.random_flip_left_right(images)
             images = tf.image.random_flip_up_down(images)
             # angle = tf.random_uniform(shape=(1,), minval=0, maxval=90)
