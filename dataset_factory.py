@@ -255,7 +255,7 @@ class GoodsDataset:
                 # transform is  vector of length 8 or tensor of size N x 8
                 # [a0, a1, a2, b0, b1, b2, c0, c1]            
                 #tr0 = -30.0
-                tr0 = -20.0
+                tr0 = -10.0
                 a0 = tf.constant([1.0])
                 a1 = tf.random_uniform(shape=(1,), minval=0.0, maxval=settings.transform_maxval)
                 a2 = tf.constant([tr0])
