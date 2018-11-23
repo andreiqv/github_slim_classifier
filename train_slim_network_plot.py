@@ -166,9 +166,7 @@ if __name__ == '__main__':
 
 		#with tf.device("/device:GPU:1"):
 		logits, end_points = net(x, num_classes=num_classes, is_training=True)
-
 		variables_to_restore = slim.get_variables_to_restore()
-
 		logits = tf.reshape(logits, [-1, num_classes])
 		output = tf.nn.softmax(logits, name=OUTPUT_NODE)
 
@@ -269,7 +267,7 @@ if __name__ == '__main__':
 
 				if epoch % epochs_checkpoint == 0 and epoch > 1:
 					# save_checkpoints	
-					saver = tf.train.Saver()		
+					saver = tf.train.Saver(variables_to_restore)		
 					saver.save(sess, './{}/{}'.\
 						format(dir_for_checkpoints, checkpoint_name))  
 
