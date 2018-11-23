@@ -254,12 +254,14 @@ class GoodsDataset:
                 #transform1 = tf.constant([1.0, 0.2, -30.0, 0.2, 1.0, 0.0, 0.0, 0.0], dtype=tf.float32)            
                 # transform is  vector of length 8 or tensor of size N x 8
                 # [a0, a1, a2, b0, b1, b2, c0, c1]            
+                #tr0 = -30.0
+                tr0 = -20.0
                 a0 = tf.constant([1.0])
                 a1 = tf.random_uniform(shape=(1,), minval=0.0, maxval=settings.transform_maxval)
-                a2 = tf.constant([-30.0])
+                a2 = tf.constant([tr0])
                 b0 = tf.random_uniform(shape=(1,), minval=0.0, maxval=settings.transform_maxval)
                 b1 = tf.constant([1.0])
-                b2 = tf.constant([-30.0])
+                b2 = tf.constant([tr0])
                 c0 = tf.constant([0.0])
                 c1 = tf.constant([0.0])
                 transform1 = tf.concat(axis=0, values=[a0, a1, a2, b0, b1, b2, c0, c1])
@@ -268,7 +270,7 @@ class GoodsDataset:
                 images = tf.contrib.image.transform(images, transform1)            
                 images = tf.image.resize_image_with_crop_or_pad(images, h, w)  # no GPU support
                 # ---            
-                zoom = 1.1
+                zoom = 1.05 # 1.1
                 w_crop = math.ceil(w / zoom)
                 h_crop = math.ceil(h / zoom)
                 #batch_size = int(images.shape[0])
@@ -283,10 +285,10 @@ class GoodsDataset:
                 
                 
                 # small delta:            
-                images = tf.image.random_hue(images, max_delta=0.02)
-                images = tf.image.random_contrast(images, lower=0.9, upper=1.2)
-                images = tf.image.random_brightness(images, max_delta=0.05)
-                images = tf.image.random_saturation(images, lower=1.0, upper=1.2)
+                images = tf.image.random_hue(images, max_delta=0.01)
+                images = tf.image.random_contrast(images, lower=0.9, upper=1.1)
+                images = tf.image.random_brightness(images, max_delta=0.02)
+                images = tf.image.random_saturation(images, lower=1.0, upper=1.1)
                 """
 
                 images = tf.image.random_hue(images, max_delta=0.05)
