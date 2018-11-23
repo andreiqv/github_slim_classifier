@@ -157,6 +157,7 @@ if __name__ == '__main__':
 		y = tf.placeholder(tf.float32, [None, num_classes], name='y')
 
 		logits, end_points = net(x, num_classes=num_classes, is_training=True)
+		variables_to_restore = slim.get_variables_to_restore()
 		logits = tf.reshape(logits, [-1, num_classes])
 		output = tf.nn.softmax(logits, name=OUTPUT_NODE)
 
@@ -171,7 +172,7 @@ if __name__ == '__main__':
 			sess.run(tf.global_variables_initializer())
 
 			if arguments.restore_checkpoint is not None:		
-				tf.train.Saver().restore(sess, './{}/{}'.\
+				tf.train.Saver(variables_to_restore).restore(sess, './{}/{}'.\
 					format(dir_for_checkpoints, arguments.restore_checkpoint))			
 
 			for epoch in range(num_epochs):
@@ -254,7 +255,7 @@ if __name__ == '__main__':
 
 				if epoch % epochs_checkpoint == 0 and epoch > 1:
 					# save_checkpoints	
-					saver = tf.train.Saver()		
+					saver = tf.train.Saver(variables_to_restore)		
 					saver.save(sess, './{}/{}'.\
 						format(dir_for_checkpoints, checkpoint_name))  
 
