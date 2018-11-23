@@ -170,18 +170,19 @@ if __name__ == '__main__':
 		output = tf.nn.softmax(logits, name=OUTPUT_NODE)
 
 		loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
-		train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
-		#train_op = tf.train.AdamOptimizer(0.01).minimize(loss)		
+		#train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
+		train_op = tf.train.AdamOptimizer(0.01).minimize(loss)		
 		correct_prediction = tf.equal(tf.argmax(logits,1), tf.argmax(y,1))
 		acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1 - mean value	
 		acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)  # list values for batch.
 				
-		
+
 		with tf.Session() as sess:
 			sess.run(tf.global_variables_initializer())
 
-			if arguments.restore_checkpoint is not None:		
-				tf.train.Saver().restore(sess, './{}/{}'.\
+			if arguments.restore_checkpoint is not None:			
+				variables_to_restore = slim.get_variables_to_restore()
+				tf.train.Saver(variables_to_restore).restore(sess, './{}/{}'.\
 					format(dir_for_checkpoints, arguments.restore_checkpoint))			
 
 			for epoch in range(num_epochs):
