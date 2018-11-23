@@ -232,7 +232,7 @@ class GoodsDataset:
             #with tf.device("/device:CPU:0"):
                 
                 images = tf.image.random_flip_left_right(images)
-                images = tf.image.random_flip_up_down(images)
+                #images = tf.image.random_flip_up_down(images)
                 
                 # Rotation and transformation
                 # print(images.shape)  # = (?, 299, 299, ?)
