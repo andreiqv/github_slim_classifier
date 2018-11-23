@@ -36,7 +36,8 @@ slim = tf.contrib.slim
 from nets import simple_fc
 #net, net_model_name = simple_fc.fc, 'simple_fc'
 #net, net_model_name = alexnet.alexnet_v2, 'alexnet_v2'
-net, net_model_name = resnet_v2.resnet_v2_50, 'resnet_v2_50_imgaug'
+#net, net_model_name = resnet_v2.resnet_v2_50, 'resnet_v2_50_imgaug'
+net, net_model_name = mobilenet_v2.mobilenet_v2_035, 'mobilenet_v2_035_imgaug'
 
 
 #net = inception.inception_v3

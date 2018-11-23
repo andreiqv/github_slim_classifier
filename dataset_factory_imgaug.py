@@ -243,10 +243,10 @@ class GoodsDatasetImgaug(GoodsDataset):
 
             #--------
             # color 
-            images = tf.image.random_hue(images, max_delta=0.05)
-            images = tf.image.random_contrast(images, lower=0.9, upper=1.5)
-            images = tf.image.random_brightness(images, max_delta=0.1)
-            images = tf.image.random_saturation(images, lower=1.0, upper=1.5)    
+            images = tf.image.random_hue(images, max_delta=0.01)
+            images = tf.image.random_contrast(images, lower=0.9, upper=1.1)
+            images = tf.image.random_brightness(images, max_delta=0.02)
+            images = tf.image.random_saturation(images, lower=1.0, upper=1.1)
             #--------            
             images = np.array(images)
             labels = np.array(labels)
