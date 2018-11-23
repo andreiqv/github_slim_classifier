@@ -168,13 +168,13 @@ if __name__ == '__main__':
 		logits, end_points = net(x, num_classes=num_classes, is_training=True)
 
 		variables_to_restore = slim.get_variables_to_restore()
-		
+
 		logits = tf.reshape(logits, [-1, num_classes])
 		output = tf.nn.softmax(logits, name=OUTPUT_NODE)
 
 		loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
 		#train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
-		train_op = tf.train.AdamOptimizer(0.01).minimize(loss)		
+		train_op = tf.train.AdamOptimizer(0.001).minimize(loss)		
 		correct_prediction = tf.equal(tf.argmax(logits,1), tf.argmax(y,1))
 		acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1 - mean value	
 		acc_top6 = tf.nn.in_top_k(logits, tf.argmax(y,1), 6)  # list values for batch.
