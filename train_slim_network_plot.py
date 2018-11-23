@@ -166,6 +166,9 @@ if __name__ == '__main__':
 
 		#with tf.device("/device:GPU:1"):
 		logits, end_points = net(x, num_classes=num_classes, is_training=True)
+
+		variables_to_restore = slim.get_variables_to_restore()
+		
 		logits = tf.reshape(logits, [-1, num_classes])
 		output = tf.nn.softmax(logits, name=OUTPUT_NODE)
 
@@ -181,7 +184,7 @@ if __name__ == '__main__':
 			sess.run(tf.global_variables_initializer())
 
 			if arguments.restore_checkpoint is not None:			
-				variables_to_restore = slim.get_variables_to_restore()
+				
 				tf.train.Saver(variables_to_restore).restore(sess, './{}/{}'.\
 					format(dir_for_checkpoints, arguments.restore_checkpoint))			
 
