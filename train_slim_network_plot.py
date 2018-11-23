@@ -171,7 +171,7 @@ if __name__ == '__main__':
 		output = tf.nn.softmax(logits, name=OUTPUT_NODE)
 
 		loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y)
-		train_op = tf.train.AdagradOptimizer(0.01).minimize(loss)
+		train_op = tf.train.AdagradOptimizer(0.005).minimize(loss)
 		#train_op = tf.train.AdamOptimizer(0.001).minimize(loss)		
 		correct_prediction = tf.equal(tf.argmax(logits,1), tf.argmax(y,1))
 		acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32)) # top-1 - mean value	
