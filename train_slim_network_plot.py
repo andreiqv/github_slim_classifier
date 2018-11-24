@@ -187,7 +187,7 @@ if __name__ == '__main__':
 					format(dir_for_checkpoints, arguments.restore_checkpoint))			
 
 			for epoch in range(num_epochs):
-				print('\nEPOCH {}/{}'.format(epoch, num_epochs))
+				print('\nEPOCH {}/{} ({})'.format(epoch, num_epochs, net_model_name))
 
 				timer('train, epoch {0}'.format(epoch))
 				train_loss_list, train_acc_list, train_top6_list = [], [], []

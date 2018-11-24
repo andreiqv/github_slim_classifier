@@ -234,7 +234,6 @@ class GoodsDataset:
                 images = tf.image.random_flip_left_right(images)
                 #images = tf.image.random_flip_up_down(images)
                 
-                """
                 # Rotation and transformation
                 # print(images.shape)  # = (?, 299, 299, ?)
                 print('images.shape:', images.shape)      
@@ -250,7 +249,8 @@ class GoodsDataset:
                 images = tf.contrib.image.rotate(images, angle * math.pi / 180, interpolation='BILINEAR')
                                 
                 #images = tf.image.crop_to_bounding_box(images, d, d, w+d, h+d)
-                                         
+                             
+                """            
                 # Transformation
                 #transform1 = tf.constant([1.0, 0.2, -30.0, 0.2, 1.0, 0.0, 0.0, 0.0], dtype=tf.float32)            
                 # transform is  vector of length 8 or tensor of size N x 8
