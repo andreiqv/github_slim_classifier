@@ -232,7 +232,7 @@ class GoodsDataset:
             #with tf.device("/device:CPU:0"):
                 
                 images = tf.image.random_flip_left_right(images)
-                #images = tf.image.random_flip_up_down(images)
+                images = tf.image.random_flip_up_down(images)
                 
                 # Rotation and transformation
                 # print(images.shape)  # = (?, 299, 299, ?)
@@ -255,7 +255,7 @@ class GoodsDataset:
                 # transform is  vector of length 8 or tensor of size N x 8
                 # [a0, a1, a2, b0, b1, b2, c0, c1]            
                 #tr0 = -30.0
-                tr0 = -5.0
+                tr0 = -30.0
                 a0 = tf.constant([1.0])
                 a1 = tf.random_uniform(shape=(1,), minval=0.0, maxval=settings.transform_maxval)
                 a2 = tf.constant([tr0])
@@ -270,7 +270,7 @@ class GoodsDataset:
                 images = tf.contrib.image.transform(images, transform1)            
                 images = tf.image.resize_image_with_crop_or_pad(images, h, w)  # no GPU support
                 # ---            
-                zoom = 1.05 # 1.1
+                zoom = 1.1 # 1.1
                 w_crop = math.ceil(w / zoom)
                 h_crop = math.ceil(h / zoom)
                 #batch_size = int(images.shape[0])
@@ -284,10 +284,10 @@ class GoodsDataset:
                                 
                 
                 # small delta:            
-                images = tf.image.random_hue(images, max_delta=0.01)
-                images = tf.image.random_contrast(images, lower=0.9, upper=1.1)
-                images = tf.image.random_brightness(images, max_delta=0.01)
-                images = tf.image.random_saturation(images, lower=1.0, upper=1.1)
+                images = tf.image.random_hue(images, max_delta=0.02)
+                images = tf.image.random_contrast(images, lower=0.9, upper=1.3)
+                images = tf.image.random_brightness(images, max_delta=0.03)
+                images = tf.image.random_saturation(images, lower=1.0, upper=1.3)
                 """
 
                 images = tf.image.random_hue(images, max_delta=0.05)
