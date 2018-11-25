@@ -104,9 +104,8 @@ epochs_checkpoint = 20 # interval for saving checkpoints and pb-file
 train_steps_per_epoch = 724 #1157
 valid_steps_per_epoch = 78  #77
 
-#train_dataset = train_dataset.repeat()
-#valid_dataset = valid_dataset.repeat()
-
+train_dataset = train_dataset.repeat()
+valid_dataset = valid_dataset.repeat()
 
 """
 def model_function(next_element):
@@ -155,8 +154,9 @@ if __name__ == '__main__':
 	#print('valid data size:', valid_generator.n)
 	#print('validation_steps:', validation_steps)
 
+	history = model.fit_generator(train_dataset.make_one_shot_iterator(),
 	history = model.fit_generator(train_dataset,
 		steps_per_epoch=train_steps_per_epoch,
 		epochs=num_epochs,
-		validation_data=valid_dataset,
+		validation_data=valid_dataset.make_one_shot_iterator(),
 		validation_steps=valid_steps_per_epoch)
