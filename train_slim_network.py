@@ -20,9 +20,10 @@ from settings import IMAGE_SIZE
 from utils.timer import timer
 from augment import images_augment
 
+#--------------------
+
 slim = tf.contrib.slim
 
-#--
 #import models.inception_v3 as inception
 from tensorflow.contrib.slim.nets import inception
 from tensorflow.contrib.slim.nets import resnet_v1, resnet_v2
