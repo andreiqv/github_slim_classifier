@@ -103,8 +103,10 @@ num_epochs = 500
 epochs_checkpoint = 20 # interval for saving checkpoints and pb-file 
 train_steps_per_epoch = 724 #1157
 valid_steps_per_epoch = 78  #77
-train_dataset = train_dataset.repeat()
-valid_dataset = valid_dataset.repeat()
+
+#train_dataset = train_dataset.repeat()
+#valid_dataset = valid_dataset.repeat()
+
 
 """
 def model_function(next_element):
