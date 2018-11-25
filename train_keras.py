@@ -155,7 +155,6 @@ if __name__ == '__main__':
 	#print('validation_steps:', validation_steps)
 
 	history = model.fit_generator(train_dataset.make_one_shot_iterator(),
-	history = model.fit_generator(train_dataset,
 		steps_per_epoch=train_steps_per_epoch,
 		epochs=num_epochs,
 		validation_data=valid_dataset.make_one_shot_iterator(),
