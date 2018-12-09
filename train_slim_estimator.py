@@ -81,6 +81,7 @@ os.system('mkdir -p {}'.format(dir_for_checkpoints))
 #--
 # plotting
 SHOW_PLOT = True
+from plot import plot_figure
 import matplotlib.pyplot as plt
 fig = plt.figure(figsize=(10, 5))
 ax1 = fig.add_subplot(121)
@@ -109,7 +110,7 @@ def plot_figure(results, ax1, ax2):
 
 #------------
 # dataset
-from dataset_factory import GoodsDataset
+from dataset_factory_gpu import GoodsDataset
 #from dataset_factory_imgaug import GoodsDatasetImgaug as GoodsDataset
 
 goods_dataset = GoodsDataset(settings.dataset_list, settings.labels_list, 
@@ -123,8 +124,9 @@ num_epochs = 500
 epochs_checkpoint = 20 # interval for saving checkpoints and pb-file 
 train_steps_per_epoch = 724 #1157
 valid_steps_per_epoch = 78  #77
-train_dataset = train_dataset.repeat()
-valid_dataset = valid_dataset.repeat()
+#train_dataset = train_dataset.repeat()
+#valid_dataset = valid_dataset.repeat()
+
 
 """
 def model_function(next_element):
@@ -135,6 +137,9 @@ def model_function(next_element):
 	return logits, loss
 """
 
+
+
+#-------------
 
 def createParser ():
 	"""	ArgumentParser """
@@ -157,17 +162,28 @@ if __name__ == '__main__':
 	config = tf.estimator.RunConfig(train_distribute=strategy)
 	#estimator = tf.keras.estimator.model_to_estimator(model, config=config)
 
+	"""
 	def input_fn(images, labels, epochs, batch_size):
 		#ds = ds.shuffle(SHUFFLE_SIZE).repeat(epochs).batch(batch_size)
 		train_dataset = train_dataset.prefetch(2)
 
 		# Return the dataset. (L)
     	return train_dataset
+    """
+
+	def train_input_fn(batch_size):
+		"""An input function for training"""
+		# Convert the inputs to a Dataset.
+		# Shuffle, repeat, and batch the examples.
+		train_dataset = train_dataset.repeat().batch(batch_size)
+		# Return the read end of the pipeline.
+		return train_dataset.make_one_shot_iterator().get_next()	
 
 
 	BATCH_SIZE = 32
 	EPOCHS = 10
 
+	"""
 	classifier = tf.estimator.Estimator(
 		model_fn=my_model_fn,
 		params={
@@ -177,14 +193,13 @@ if __name__ == '__main__':
 			# The model must choose between 3 classes.
 			'n_classes': 3,
 	})
-
-
 	estimator.train(lambda:input_fn(train_images, train_labels, 
 		epochs=EPOCHS, batch_size=BATCH_SIZE))
-
-
-
-
+	"""
+	column = tf.feature_column.categorical_column_with_identity('x', vocab_size)
+	classifier = tf.estimator.LinearClassifier(
+		feature_columns=[column], 
+		model_dir=os.path.join(model_dir, 'bow_sparse'))
 
 
 	graph = tf.Graph()  # сreate a new graph
