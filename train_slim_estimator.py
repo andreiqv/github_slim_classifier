@@ -81,7 +81,7 @@ os.system('mkdir -p {}'.format(dir_for_checkpoints))
 #--
 # plotting
 SHOW_PLOT = True
-from plot import plot_figure
+#from plot import plot_figure
 import matplotlib.pyplot as plt
 fig = plt.figure(figsize=(10, 5))
 ax1 = fig.add_subplot(121)
